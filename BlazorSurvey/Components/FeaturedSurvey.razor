@@ -1,0 +1,73 @@
+﻿
+<div class="card text-center h-100">
+    <div class="card-header">
+        Featured Survey
+    </div>
+    <div class="card-body">
+        @if (Survey == null)
+        {
+            <p>Sorry, there is no featured survey right now</p>
+        }
+        else
+        {
+            <h5 class="card-title">@Survey.SurveyName</h5>
+            <p class="card-text">@Survey.Description</p>
+
+            @if (Survey.SurveyOptions == null)
+            {
+                <p>Loading...</p>
+            }
+            else
+            {
+                <table class="table-borderless">
+                    <tbody>
+                        @foreach (var survey in Survey.SurveyOptions)
+                        {
+                            <SurveyOptionItem Item="@survey" TotalSurveyVotes="@Survey.TotalVotes"/>                        
+                        }
+
+                    </tbody>
+                </table>
+            }
+            <button href="#" class="btn btn-outline-dark" @onclick="()=> TakeSurvey(Survey.SurveyId)">Take Survey</button>
+        }
+
+    </div>
+    <div class="card-footer text-muted">
+        @if (Survey != null)
+        {
+            <p>Created on @Survey.CreatedOn.ToShortDateString()</p>
+        }       
+    </div>
+</div>
+
+
+@code {
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
+
+    [Inject]
+    public SurveysDbContext Context { get; set; }
+
+    private Survey Survey = null;
+
+
+    private async Task TakeSurvey(int surveyId)
+    {
+        //await JSRuntime.InvokeVoidAsync("window.alert", surveyId);
+
+        NavigationManager.NavigateTo($"survey/{surveyId}");
+
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        Survey = await Context.Surveys.Where(x => x.FeaturedSurvey == true).Include(x => x.SurveyOptions).FirstOrDefaultAsync();
+    }
+}

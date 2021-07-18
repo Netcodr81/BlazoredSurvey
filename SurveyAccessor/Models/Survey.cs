@@ -18,6 +18,12 @@ namespace SurveyAccessor.Models
 
         public int TotalVotes { get; set; }
 
+        public bool FeaturedSurvey { get; set; }
+
+        public int TotalTimesTaken { get; set; }
+
+        public DateTime CreatedOn { get; set; }
+
         public ICollection<SurveyOption> SurveyOptions { get; set; }
     }
 }

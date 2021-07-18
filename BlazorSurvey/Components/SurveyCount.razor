@@ -1,0 +1,44 @@
+﻿
+<div class="card text-center h-100">
+    <div class="card-header">
+        Total Number of Surveys
+    </div>
+    <div class="card-body">
+        @if (NumberOfSurveys == null)
+        {
+            <p>Loading...</p>
+        }
+        else
+        {
+            <p class="display-4">@NumberOfSurveys</p>
+        }
+
+
+    </div>
+    <div class="card-footer text-muted">
+        <p></p>
+    </div>
+</div>
+
+
+@code {
+
+
+
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
+
+    [Inject]
+    public SurveysDbContext Context { get; set; }
+
+    private int? NumberOfSurveys { get; set; }
+
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var surveys = Context.Surveys.Select(x => x.SurveyId);
+        NumberOfSurveys = await surveys.CountAsync();
+    }
+  
+}

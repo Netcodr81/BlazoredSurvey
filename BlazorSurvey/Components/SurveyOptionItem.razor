@@ -1,0 +1,31 @@
+﻿
+<tr>
+    <td><img src="@imageSrc" width="50" /></td>
+    <td>@Item.Description</td>
+    <td class="w-100 px-1">
+        <div class="progress">
+            <div class="progress-bar featured-progress-bar" role="progressbar" style="width: @(totalPercentage)%" aria-valuenow="@totalPercentage" aria-valuemin="0" aria-valuemax="100">@(totalPercentage)%</div>
+        </div>
+    </td>
+</tr>
+
+@code {
+    [Parameter]
+    public SurveyOption Item { get; set; }
+
+    [Parameter]
+    public int TotalSurveyVotes { get; set; }
+
+    private string imageSrc { get; set; }
+
+    private int totalPercentage { get; set; }
+
+    protected override void OnInitialized()
+    {
+        imageSrc = $"images/{Item.ImagePath}";
+
+        var calculatedPercentage = ((double)Item.TotalVotes / TotalSurveyVotes) * 100;
+
+        totalPercentage = (int)(Math.Round(calculatedPercentage));
+    }
+}

@@ -33,11 +33,11 @@ namespace BlazorSurvey
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("UsersDb")));
+                options.UseSqlServer(Configuration.GetConnectionString("UsersDb")), ServiceLifetime.Transient);
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddDbContext<SurveysDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SurveysDb")));
+            services.AddDbContext<SurveysDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SurveysDb")), ServiceLifetime.Transient);
 
             services.AddRazorPages();
             services.AddServerSideBlazor();

@@ -21,7 +21,8 @@ namespace SurveyAccessor.Context
                 e.Property(p => p.SurveyId).IsRequired().ValueGeneratedOnAdd();
                 e.HasKey(p => p.SurveyId);
                 e.Property(p => p.Description).HasMaxLength(255);
-                e.Property(p => p.SurveyName).HasMaxLength(50).IsRequired();              
+                e.Property(p => p.SurveyName).HasMaxLength(50).IsRequired();
+                e.Property(p => p.CreatedOn).IsRequired().HasDefaultValueSql("getdate()");
             });
 
             modelBuilder.Entity<Survey>().HasMany(e => e.SurveyOptions).WithOne(e => e.Survey).HasForeignKey(e => e.Fk_SurveyId);
