@@ -1,7 +1,32 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+    <header class="bg-dark">
+        <div class="container">
+            <div class="row gx-5 justify-content-center">
+                <div class="col-lg-6">
+                    <div class="text-center my-5">
+                        <h1 class="display-5 fw-bolder text-white mb-2">Take surveys and compare your results with people around the world</h1>
+                        <p class="lead text-white-50 mb-4">Select a survey to take from the list below or choose a survey to view its current results</p>
+                        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                            <a class="btn btn-primary btn-lg px-4 me-sm-3" href="#features">View Current Surveys</a>
+                            <a class="btn btn-outline-light btn-lg px-4" href="#!">Take a Survey</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+    <div class="container">
+        <div class="align-items-center row">
+            <div class="col-4">
+                <RandomSurveyResult />
+            </div>
+            <div class="col-4">
+                <RandomSurveyResult />
+            </div>
+            <div class="col-4">
+                <RandomSurveyResult />
+            </div>
+        </div>
+    </div>

@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorSurvey", "BlazorSurvey\BlazorSurvey.csproj", "{7D172768-21CC-4EA1-8B7A-BC544864A8BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SurveyAccessor", "SurveyAccessor\SurveyAccessor.csproj", "{ABDACA06-04C0-4A32-888C-3048F7A2AF53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SurveyAccessor", "SurveyAccessor\SurveyAccessor.csproj", "{ABDACA06-04C0-4A32-888C-3048F7A2AF53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
