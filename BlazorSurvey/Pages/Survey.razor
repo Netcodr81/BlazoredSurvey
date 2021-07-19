@@ -1,10 +1,122 @@
 ﻿@page "/survey/{id:int}"
 
 
-<h1>Take Survey Page</h1>
+<div class="container mt-5">
+    <div class="card text-center">
+        <div class="card-header">
+            @SurveyVM.SurveyName
+        </div>
+        <div class="card-body">
+
+            @if (!isReady)
+            {
+                <p>Loading...</p>
+            }
+            else
+            {
+        <EditForm Model="SurveyVM" OnValidSubmit="SubmitSurvey">
+            <DataAnnotationsValidator />
+            <div class="row justify-content-center">
+                <ValidationSummary />
+            </div>
+         
+            <div class="row justify-content-center">@(SurveyVM.SurveyQuestion)?</div>
+            <div class="row justify-content-center mt-3">
+
+
+
+                <div class="form-group">
+                    <div>
+                        <InputRadioGroup Name="SurveyOptions" class="form-group mt-5" @bind-Value="@SurveyVM.SelectedOption">
+
+                            @foreach (var option in SurveyVM.SurveyOptions)
+                                {
+                                <div class="row">
+                                    <InputRadio Name="SurveyOptions" class="form-check-input" Value="option.SurveyOptionId" /><label class="form-check-label">@option.Description</label>
+                                </div>
+
+                                }
+
+                        </InputRadioGroup>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center my-3">
+                <input type="submit" class="btn btn-primary" value="Submit" />
+            </div>
+
+        </EditForm>
+            }
+
+        </div>
+        <div class="card-footer text-muted">
+            Created on  @(SurveyVM == null ?  "" : SurveyVM.CreatedOn.ToShortDateString())
+        </div>
+    </div>
+</div>
 
 @code {
 
     [Parameter]
     public int Id { get; set; }
+
+    [Inject]
+    public SurveysDbContext Context { get; set; }
+
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    private SurveyViewModel SurveyVM = new SurveyViewModel();
+
+    private SurveyAccessor.Models.Survey survey;
+
+    private bool isReady = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        survey = await Context.Surveys.Where(x => x.SurveyId == Id).Include(x => x.SurveyOptions).FirstOrDefaultAsync();
+
+
+        SurveyVM = new SurveyViewModel()
+        {
+            SurveyId = survey.SurveyId,
+            SurveyName = survey.SurveyName,
+            SurveyOptions = survey.SurveyOptions.ToList(),
+            SurveyQuestion = survey.SurveyQuestion,
+            CreatedOn = survey.CreatedOn,
+            TotalTimesTaken = survey.TotalTimesTaken,
+            TotalVotes = survey.TotalVotes,
+            Description = survey.Description,
+            FeaturedSurvey = survey.FeaturedSurvey
+
+        };
+
+        isReady = true;
+    }
+
+    private async Task SubmitSurvey()
+    {
+        var model = SurveyVM;
+
+        SurveyVM.SurveyTaken();
+        SurveyVM.TallyVote();
+
+        survey.TotalTimesTaken = SurveyVM.TotalTimesTaken;
+        survey.SurveyOptions = SurveyVM.SurveyOptions;
+
+        Context.Attach(survey);
+        Context.Entry(survey).State = EntityState.Modified;
+
+        await Context.SaveChangesAsync();
+
+        await JSRuntime.InvokeVoidAsync("alert", "Thank you for taking the survey");
+
+        NavigationManager.NavigateTo("/");
+
+    }
+
 }

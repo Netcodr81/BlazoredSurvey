@@ -8,8 +8,8 @@
                         <h1 class="display-5 fw-bolder text-white mb-2">Take surveys and compare your results with people from around the world</h1>
                         <p class="lead text-white-50 mb-4">Select a survey to take from the list below or choose a survey to view its current results</p>
                         <div class="d-flex justify-content-center">
-                            <a class="btn btn-primary btn-lg mr-4" href="#features">View Surveys</a>
-                            <a class="btn btn-outline-light btn-lg" href="#!">Take a Survey</a>
+                            <NavLink class="btn btn-primary btn-lg mr-4" @onclick="ViewSurveys">View Surveys</NavLink>
+                            <NavLink class="btn btn-outline-light btn-lg" @onclick="TakeSurvey">Take a Random Survey</NavLink>
                         </div>
                     </div>
                 </div>
@@ -22,7 +22,7 @@
     <div class="card-deck w-100">
 
 
-      <FeaturedSurvey/>
+        <FeaturedSurvey />
 
         <SurveyCount />
 
@@ -31,3 +31,17 @@
     </div>
 </div>
 
+@code{
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
+
+    public async Task TakeSurvey()
+    {
+       await JSRuntime.InvokeVoidAsync("alert", "Take a survey");
+    }
+
+    public async Task ViewSurveys()
+    {
+        await JSRuntime.InvokeVoidAsync("window.alert", "View Surveys");
+    }
+}
