@@ -1,17 +1,21 @@
 ﻿
 <div class="card text-center h-100">
     <div class="card-header">
-       Most Popular Survey
+        Most Popular Survey
     </div>
-    <div class="card-body">
+    <div class="card-body d-flex justify-content-center flex-column">
         @if (Survey == null)
         {
             <p>Loading...</p>
         }
         else
         {
-            <p class="display-4">@Survey.SurveyName</p>
-            <p>Taken @Survey.TotalTimesTaken times</p>
+            <div class="row d-flex flex-row justify-content-center">
+                <p class="display-4">@Survey.SurveyName</p>
+            </div>
+            <div class="row d-flex flex-row justify-content-center">
+                <p>Taken @Survey.TotalTimesTaken times</p>
+            </div>
         }
 
 

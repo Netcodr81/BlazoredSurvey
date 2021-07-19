@@ -23,8 +23,11 @@
     protected override void OnInitialized()
     {
         imageSrc = $"images/{Item.ImagePath}";
-
-        var calculatedPercentage = ((double)Item.TotalVotes / TotalSurveyVotes) * 100;
+        double calculatedPercentage = 0;
+        if (Item.TotalVotes != 0)
+        {
+            calculatedPercentage = ((double)Item.TotalVotes / TotalSurveyVotes) * 100;
+        }
 
         totalPercentage = (int)(Math.Round(calculatedPercentage));
     }

@@ -14,39 +14,39 @@
             }
             else
             {
-        <EditForm Model="SurveyVM" OnValidSubmit="SubmitSurvey">
-            <DataAnnotationsValidator />
-            <div class="row justify-content-center">
-                <ValidationSummary />
-            </div>
-         
-            <div class="row justify-content-center">@(SurveyVM.SurveyQuestion)?</div>
-            <div class="row justify-content-center mt-3">
-
-
-
-                <div class="form-group">
-                    <div>
-                        <InputRadioGroup Name="SurveyOptions" class="form-group mt-5" @bind-Value="@SurveyVM.SelectedOption">
-
-                            @foreach (var option in SurveyVM.SurveyOptions)
-                                {
-                                <div class="row">
-                                    <InputRadio Name="SurveyOptions" class="form-check-input" Value="option.SurveyOptionId" /><label class="form-check-label">@option.Description</label>
-                                </div>
-
-                                }
-
-                        </InputRadioGroup>
+                <EditForm Model="SurveyVM" OnValidSubmit="SubmitSurvey">
+                    <DataAnnotationsValidator />
+                    <div class="row justify-content-center">
+                        <ValidationSummary />
                     </div>
-                </div>
-            </div>
 
-            <div class="row justify-content-center my-3">
-                <input type="submit" class="btn btn-primary" value="Submit" />
-            </div>
+                    <div class="row justify-content-center">@(SurveyVM.SurveyQuestion)?</div>
+                    <div class="row justify-content-center mt-3">
 
-        </EditForm>
+
+
+                        <div class="form-group">
+                            <div>
+                              @foreach (var option in SurveyVM.SurveyOptions)
+                                {
+                                    <div class="row">
+                                        <input class="form-check-input" type="radio"
+                                               name="SurveyOption"
+                                               value="@option.SurveyOptionId"
+                                               checked="@(SurveyVM.SelectedOption == option.SurveyOptionId.ToString())"
+                                               @onchange="@(() => UpdateSelectedValue(option.SurveyOptionId.ToString()))" />
+                                        <label class="form-check-label">@option.Description</label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center my-3">
+                        <input type="submit" class="btn btn-primary" value="Submit" />
+                    </div>
+
+                </EditForm>
             }
 
         </div>
@@ -107,6 +107,7 @@
 
         survey.TotalTimesTaken = SurveyVM.TotalTimesTaken;
         survey.SurveyOptions = SurveyVM.SurveyOptions;
+        survey.TotalVotes = SurveyVM.TotalVotes;
 
         Context.Attach(survey);
         Context.Entry(survey).State = EntityState.Modified;
@@ -117,6 +118,11 @@
 
         NavigationManager.NavigateTo("/");
 
+    }
+
+    private void UpdateSelectedValue(string selectedOptionId)
+    {
+        SurveyVM.SelectedOption = selectedOptionId;
     }
 
 }

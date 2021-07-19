@@ -9,7 +9,7 @@
                         <p class="lead text-white-50 mb-4">Select a survey to take from the list below or choose a survey to view its current results</p>
                         <div class="d-flex justify-content-center">
                             <NavLink class="btn btn-primary btn-lg mr-4" @onclick="ViewSurveys">View Surveys</NavLink>
-                            <NavLink class="btn btn-outline-light btn-lg" @onclick="TakeSurvey">Take a Random Survey</NavLink>
+                            <NavLink class="btn btn-outline-light btn-lg" @onclick="TakeRandomSurvey">Take a Random Survey</NavLink>
                         </div>
                     </div>
                 </div>
@@ -35,9 +35,20 @@
     [Inject]
     public IJSRuntime JSRuntime { get; set; }
 
-    public async Task TakeSurvey()
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    [Inject]
+    public SurveysDbContext Context { get; set; }
+
+    public async Task TakeRandomSurvey()
     {
-       await JSRuntime.InvokeVoidAsync("alert", "Take a survey");
+        Random rnd = new Random();
+        var surveyList = await Context.Surveys.ToListAsync();
+
+        var randomSurvey = surveyList.OrderBy(x => rnd.Next()).Take(1).FirstOrDefault();
+
+        NavigationManager.NavigateTo($"survey/{randomSurvey.SurveyId}");
     }
 
     public async Task ViewSurveys()
