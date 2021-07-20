@@ -1,0 +1,158 @@
+﻿<div class="container mt-5">
+    <div class="card text-center">
+        <div class="card-header">
+            Edit Survey
+        </div>
+        <div class="card-body">
+
+            @if (!isReady)
+            {
+                <p>Loading...</p>
+            }
+            else
+            {
+                <EditForm Model="SurveyToUpdate" OnValidSubmit="UpdateSurvey">
+                    <DataAnnotationsValidator />
+                    <div class="row justify-content-center">
+                        <ValidationSummary />
+                    </div>
+
+                   
+
+                        <div class="form-group row">
+                            <div class="col-6">
+                                <label class="bs-form-label" for="surveyName">Survey Name</label>
+                                <InputText id="surveyName" class="form-control" @bind-Value="@SurveyToUpdate.SurveyName" />
+                                <ValidationMessage For="@(() => SurveyToUpdate.SurveyName)" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-6">
+                                <label class="bs-form-label" for="surveyDescription">Description</label>
+                                <InputText id="surveyDescription" class="form-control" @bind-Value="@SurveyToUpdate.Description" />
+                                <ValidationMessage For="@(() => SurveyToUpdate.Description)" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-6">
+                                <label class="bs-form-label" for="surveyQuestion">Survey Question</label>
+                                <InputText id="surveyQuestion" class="form-control" @bind-Value="@SurveyToUpdate.SurveyQuestion" />
+                                <ValidationMessage For="@(() => SurveyToUpdate.SurveyQuestion)" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-6">
+                                <label class="bs-form-label" for="surveyOptions">Survey Options</label>
+                                <select class="form-control" id="surveyOptions" @onchange="UpdateOptionSelection">
+                                    <option value="">Select option...</option>
+                                    @foreach (var option in SurveyToUpdate.SurveyOptions)
+                                    {
+                                        <option value="@option.SurveyOptionId.ToString()">@option.Description</option>
+                                    }
+                                </select>
+
+                            </div>
+                            <div class="col-4 d-flex flex-row align-items-end mb-1">
+                                <input type="button" class="btn btn-sm btn-primary mr-2" value="Add Option" />
+                                @if (ShowDeleteOption)
+                                {
+                                    <input type="button" class="btn btn-sm btn-danger" value="Delete Option" @onclick="@(()=> DeleteOption(SelectedOption))" />
+                                }
+
+                            </div>
+                        </div>
+                        <div class="form-group form-check row">
+                            <div class="col-6">
+                                <InputCheckbox @bind-Value="@SurveyToUpdate.FeaturedSurvey" /> <label class="form-check-label">Featured Survey</label>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group row my-3 ml-3">
+                            <div class="col-6">
+                                <input type="submit" class="btn btn-success" value="Update" />
+                                <input type="button" class="btn btn-danger" value="Cancel" @onclick="CancelUpdate" />
+                            </div>
+
+                        </div>
+                   
+                </EditForm>
+            }
+
+        </div>
+        <div class="card-footer text-muted">
+            <p></p>
+        </div>
+    </div>
+
+
+</div>
+
+@code {
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
+
+    [Inject]
+    public SurveysDbContext Context { get; set; }
+
+    [CascadingParameter]
+    public int Id { get; set; }
+
+    private bool isReady = false;
+
+    private SurveyAccessor.Models.Survey Survey;
+
+    private EditSurveyViewModel SurveyToUpdate { get; set; }
+
+
+    private bool ShowDeleteOption = false;
+
+    private int SelectedOption;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        Survey = await Context.Surveys.Where(x => x.SurveyId == Id).Include(x => x.SurveyOptions).FirstOrDefaultAsync();
+        SurveyToUpdate = Mapper.SurveyToEditSurveyModel(Survey);
+
+        isReady = true;
+    }
+
+    private async Task UpdateSurvey()
+    {
+        var updatedSurvey = SurveyToUpdate;
+
+        Survey.SurveyName = SurveyToUpdate.SurveyName;
+        Survey.SurveyQuestion = SurveyToUpdate.SurveyQuestion;
+        Survey.FeaturedSurvey = SurveyToUpdate.FeaturedSurvey;
+        Survey.Description = SurveyToUpdate.Description;
+
+        Context.Attach(Survey);
+        Context.Entry(Survey).State = EntityState.Modified;
+
+        await Context.SaveChangesAsync();
+
+        await JSRuntime.InvokeVoidAsync("alert", "Survey Updated");
+    }
+
+    private void CancelUpdate()
+    {
+        NavigationManager.NavigateTo("surveylist/edit");
+    }
+
+    private async Task UpdateOptionSelection(ChangeEventArgs e)
+    {
+        var selectedValue = e.Value;
+        ShowDeleteOption = string.IsNullOrEmpty(e.Value.ToString()) ? false : true;           
+    }
+
+    private async Task DeleteOption(int id)
+    {
+        await JSRuntime.InvokeVoidAsync("alert", $"delete option with Id of {id}");
+    }
+}

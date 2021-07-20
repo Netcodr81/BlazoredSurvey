@@ -86,3 +86,9 @@ a, .btn-link {
     .featured-progress-bar{
         background: #bc153b;
     }
+
+    .bs-form-label{
+        width: 100%;
+        display:flex;
+        align-content: start;
+    }

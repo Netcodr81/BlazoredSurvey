@@ -81,19 +81,7 @@
         survey = await Context.Surveys.Where(x => x.SurveyId == Id).Include(x => x.SurveyOptions).FirstOrDefaultAsync();
 
 
-        SurveyVM = new SurveyViewModel()
-        {
-            SurveyId = survey.SurveyId,
-            SurveyName = survey.SurveyName,
-            SurveyOptions = survey.SurveyOptions.ToList(),
-            SurveyQuestion = survey.SurveyQuestion,
-            CreatedOn = survey.CreatedOn,
-            TotalTimesTaken = survey.TotalTimesTaken,
-            TotalVotes = survey.TotalVotes,
-            Description = survey.Description,
-            FeaturedSurvey = survey.FeaturedSurvey
-
-        };
+        SurveyVM = Mapper.SurveyToSurveyViewModel(survey);
 
         isReady = true;
     }

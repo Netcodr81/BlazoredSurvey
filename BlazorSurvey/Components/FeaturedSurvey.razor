@@ -50,11 +50,7 @@
 
     private async Task TakeSurvey(int surveyId)
     {
-        //await JSRuntime.InvokeVoidAsync("window.alert", surveyId);
-
-        NavigationManager.NavigateTo($"survey/{surveyId}");
-
-
+       NavigationManager.NavigateTo($"survey/{surveyId}");
     }
 
     protected override async Task OnInitializedAsync()

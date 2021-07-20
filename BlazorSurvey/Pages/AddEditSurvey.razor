@@ -1,6 +1,19 @@
 ﻿@page "/survey/add"
 @page "/survey/edit/{id:int}"
 
-@code {
+@if (Id == 0)
+{
+    <AddSurvey />
+}
+else
+{
+    <CascadingValue Value="@Id">
+        <EditSurvey />
+    </CascadingValue>
 
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
 }
