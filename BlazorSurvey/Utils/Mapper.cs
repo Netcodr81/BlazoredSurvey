@@ -1,6 +1,8 @@
-﻿using BlazorSurvey.ViewModels;
+﻿using System.Collections.Generic;
+using BlazorSurvey.ViewModels;
 using SurveyAccessor.Models;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BlazorSurvey.Utils
 {
@@ -14,9 +16,7 @@ namespace BlazorSurvey.Utils
                 SurveyName = survey.SurveyName,
                 Description = survey.Description,
                 SurveyQuestion = survey.SurveyQuestion,
-                FeaturedSurvey = survey.FeaturedSurvey,
-                SurveyOptions = survey.SurveyOptions
-
+                FeaturedSurvey = survey.FeaturedSurvey
             };
 
             return result;
@@ -28,7 +28,7 @@ namespace BlazorSurvey.Utils
             {
                 SurveyId = survey.SurveyId,
                 SurveyName = survey.SurveyName,
-                SurveyOptions = survey.SurveyOptions.ToList(),
+                SurveyOptions = GenerateEditViewModelOptionSelectList(survey.SurveyOptions.ToList()),
                 SurveyQuestion = survey.SurveyQuestion,
                 FeaturedSurvey = survey.FeaturedSurvey,
                 Description = survey.Description
@@ -55,22 +55,29 @@ namespace BlazorSurvey.Utils
 
             return results;
         }
+
+        private static List<SelectListItem> GenerateEditViewModelOptionSelectList(List<SurveyOption> options)
+        {
+            List<SelectListItem> selectList = new List<SelectListItem>();
+
+            if (options.Count == 0)
+            {
+                selectList.Add(new SelectListItem { Text = "Please add an option...", Value = "", Selected = true });
+            }
+            else
+            {
+                selectList.Add(new SelectListItem { Text = "Select an option...", Value = "", Selected = true });
+            }
+           
+
+            foreach (var surveyOption in options)
+            {
+                selectList.Add(new SelectListItem {Text = surveyOption.Description, Selected = false, Value = surveyOption.SurveyOptionId.ToString()});
+
+            }
+
+            return selectList;
+        }
     }
 }
 
-
-//public int SurveyId { get; set; }
-//public string SurveyName { get; set; }
-//public string Description { get; set; }
-
-//public string SurveyQuestion { get; set; }
-
-//public int TotalVotes { get; set; }
-
-//public bool FeaturedSurvey { get; set; }
-
-//public int TotalTimesTaken { get; set; }
-
-//public DateTime CreatedOn { get; set; }
-
-//public ICollection<SurveyOption> SurveyOptions { get; set; }

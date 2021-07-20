@@ -1,0 +1,60 @@
+﻿<div>
+    <EditForm Model="@optionModel" OnSubmit="TestSave">
+        <DataAnnotationsValidator />
+        <div class="row justify-content-center">
+            <ValidationSummary />
+        </div>
+        <div class="form-group">
+            <label class="bs-form-label">Description</label>
+            <InputText class="form-control" @bind-Value="@optionModel.Description" />
+        </div>
+
+    </EditForm>
+
+    <button @onclick="TestSave" class="btn btn-primary">Add</button>
+    <button @onclick="Cancel" class="btn btn-secondary">Cancel</button>
+</div>
+
+@code {
+    [CascadingParameter]
+    BlazoredModalInstance Modal { get; set; }
+
+    [Parameter]
+    public int SurveyId { get; set; }
+
+    //Just for development reasons
+    [Parameter]
+    public int MaxId { get; set; }
+
+    private OptionViewModel optionModel = new OptionViewModel();
+    private SurveyOption returnOption = new SurveyOption();
+
+    protected override void OnInitialized()
+    {
+        optionModel.Fk_SurveyId = SurveyId;
+    }
+
+    private void SaveOption()
+    {
+        returnOption.Fk_SurveyId = optionModel.Fk_SurveyId;
+        returnOption.Description = optionModel.Description;
+        returnOption.ImagePath = optionModel.ImagePath;
+        returnOption.SurveyOptionId = 14;
+        returnOption.TotalVotes = 0;
+
+        Modal.CloseAsync(ModalResult.Ok<SurveyOption>(returnOption));
+    }
+
+    private void TestSave()
+    {
+        returnOption.Fk_SurveyId = optionModel.Fk_SurveyId;
+        returnOption.Description = optionModel.Description;
+        returnOption.ImagePath = optionModel.ImagePath;
+        returnOption.SurveyOptionId = MaxId + 1;
+        returnOption.TotalVotes = 0;
+
+        Modal.CloseAsync(ModalResult.Ok<SurveyOption>(returnOption));
+    }
+
+    void Cancel() => Modal.CancelAsync();
+}

@@ -44,20 +44,20 @@
                     <div class="form-group row">
                         <div class="col-6">
                             <label class="bs-form-label" for="surveyOptions">Survey Options</label>
-                            <select class="form-control" id="surveyOptions" @onchange="UpdateOptionSelection">
-                                <option value="">Select option...</option>
-                                @foreach (var option in SurveyToUpdate.SurveyOptions)
-                                {
-                                    <option value="@option.SurveyOptionId.ToString()">@option.Description</option>
-                                }
-                            </select>
+                         
+                            <select class="form-control" id="surveyOptions"  @onchange="UpdateOptionSelection">
+                                    @foreach (var option in SurveyToUpdate.SurveyOptions)
+                                    {
+                                        <option value="@option.Value">@option.Text</option>
+                                    }
+                                </select>
 
                         </div>
                         <div class="col-4 d-flex flex-row align-items-end mb-1">
-                            <input type="button" class="btn btn-sm btn-primary mr-2" value="Add Option" />
-                            @if (ShowDeleteOption)
+                            <input type="button" class="btn btn-sm btn-primary mr-2" value="Add Option" @onclick="AddOption" />
+                            @if (SurveyToUpdate.ShowDeleteOption)
                             {
-                                <input type="button" class="btn btn-sm btn-danger" value="Delete Option" @onclick="@(()=> DeleteOption(SelectedOption))" />
+                                <input type="button" class="btn btn-sm btn-danger" value="Delete Option" @onclick="@(() => DeleteOption(SelectedOption))" />
                             }
 
                         </div>
@@ -113,9 +113,9 @@
     private EditSurveyViewModel SurveyToUpdate { get; set; }
 
 
-    private bool ShowDeleteOption = false;
+    private bool ShowDeleteOption {  get; set; } = false;
 
-    private int SelectedOption;
+    private static int SelectedOption { get; set; } = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -125,6 +125,7 @@
 
         isReady = true;
     }
+
 
     private async Task UpdateSurvey()
     {
@@ -152,15 +153,14 @@
     {
         var selectedValue = e.Value;
 
-
         if (!string.IsNullOrWhiteSpace(selectedValue.ToString()))
         {
-            ShowDeleteOption = true;
+            SurveyToUpdate.ShowDeleteOption = true;
             SelectedOption = Int32.Parse(selectedValue.ToString());
         }
         else
         {
-            ShowDeleteOption = false;
+            SurveyToUpdate.ShowDeleteOption = false;
             SelectedOption = 0;
         }
     }
@@ -175,11 +175,31 @@
 
         if (!result.Cancelled)
         {
+            SurveyToUpdate.RemoveSurveyOption(id);
+            SelectedOption = 0;
+            await JSRuntime.InvokeVoidAsync("selectList.SetSelectedItem", "surveyOptions", "");
 
-            var optionToRemove = SurveyToUpdate.SurveyOptions.FirstOrDefault(x => x.SurveyOptionId == Id);
-            SurveyToUpdate.SurveyOptions.Remove(optionToRemove);       
 
+        }
+    }
 
+    private async Task AddOption()
+    {
+        var maxId = SurveyToUpdate.SurveyOptions.Count == 0 ? 1 : Int32.Parse(SurveyToUpdate.SurveyOptions.OrderByDescending(x => x.Value).FirstOrDefault().Value);
+        
+        var parameters = new ModalParameters();
+        parameters.Add("SurveyId", SurveyToUpdate.SurveyId);
+        parameters.Add("MaxId", maxId);
+        
+        var formModal = Modal.Show<AddOption>("Add an Option", parameters);
+
+        var result = await formModal.Result;
+
+        if (!result.Cancelled)
+        {
+            var results = result.Data;
+            SurveyToUpdate.AddSurveyOption((SurveyOption)result.Data);
+            await JSRuntime.InvokeVoidAsync("selectList.SetSelectedItem", "surveyOptions", "");
         }
     }
 }
