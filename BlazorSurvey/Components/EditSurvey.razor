@@ -101,6 +101,9 @@
     public SurveysDbContext Context { get; set; }
 
     [CascadingParameter]
+    IModalService Modal { get; set; }
+
+    [CascadingParameter]
     public int Id { get; set; }
 
     private bool isReady = false;
@@ -148,11 +151,13 @@
     private async Task UpdateOptionSelection(ChangeEventArgs e)
     {
         var selectedValue = e.Value;
-        ShowDeleteOption = string.IsNullOrEmpty(e.Value.ToString()) ? false : true;           
+        ShowDeleteOption = string.IsNullOrEmpty(e.Value.ToString()) ? false : true;
     }
 
-    private async Task DeleteOption(int id)
+    private void DeleteOption(int id)
     {
-        await JSRuntime.InvokeVoidAsync("alert", $"delete option with Id of {id}");
+
+        Modal.Show<Confirm>();
+       
     }
 }
