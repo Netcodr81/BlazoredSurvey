@@ -1,7 +1,9 @@
-﻿<div>
-    <p>Please click one of the buttons below to close or cancel the modal.</p>
+﻿
 
-    <button @onclick="Close" class="btn btn-primary">Close</button>
+<div>
+    <p>@Message</p>
+
+    <button @onclick="Accept" class="btn btn-primary">OK</button>
     <button @onclick="Cancel" class="btn btn-secondary">Cancel</button>
 </div>
 
@@ -9,6 +11,12 @@
     [CascadingParameter]
     BlazoredModalInstance Modal { get; set; }
 
-    void Close() => Modal.CloseAsync(ModalResult.Ok(true));
+    [Parameter]
+    public int SurveyOptionId { get; set; }
+
+    [Parameter]
+    public string Message { get; set; }
+
+    void Accept() => Modal.CloseAsync(ModalResult.Ok(SurveyOptionId));
     void Cancel() => Modal.CancelAsync();
 }
