@@ -7,16 +7,3 @@
     <button @onclick="Cancel" class="btn btn-secondary">No</button>
 </div>
 
-@code {
-    [CascadingParameter]
-    BlazoredModalInstance Modal { get; set; }
-
-    [Parameter]
-    public int SurveyOptionId { get; set; }
-
-    [Parameter]
-    public string Message { get; set; }
-
-    void Accept() => Modal.CloseAsync(ModalResult.Ok(SurveyOptionId));
-    void Cancel() => Modal.CancelAsync();
-}

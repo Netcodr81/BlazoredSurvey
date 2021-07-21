@@ -21,24 +21,3 @@
 </div>
 
 
-@code {
-
-
-
-    [Inject]
-    public IJSRuntime JSRuntime { get; set; }
-
-    [Inject]
-    public SurveysDbContext Context { get; set; }
-
-    private int? NumberOfSurveys { get; set; }
-
-
-
-    protected override async Task OnParametersSetAsync()
-    {
-        var surveys = Context.Surveys.Select(x => x.SurveyId);
-        NumberOfSurveys = await surveys.CountAsync();
-    }
-  
-}
