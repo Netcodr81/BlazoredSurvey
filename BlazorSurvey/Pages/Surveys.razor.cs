@@ -34,5 +34,10 @@ namespace BlazorSurvey.Pages
             NavigationManager.NavigateTo($"survey/{id}");
         }
 
+        private void ViewSurveyResults(int id)
+        {
+            NavigationManager.NavigateTo($"survey/results/{id}");
+        }
+
     }
 }

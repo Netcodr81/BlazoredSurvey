@@ -29,7 +29,7 @@ namespace BlazorSurvey.Components
                 calculatedPercentage = ((double)Item.TotalVotes / TotalSurveyVotes) * 100;
             }
 
-            totalPercentage = (int)(Math.Round(calculatedPercentage));
+            totalPercentage = (int)(Math.Floor(calculatedPercentage));
         }
     }
 }

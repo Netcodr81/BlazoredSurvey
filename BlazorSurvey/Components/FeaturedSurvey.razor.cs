@@ -26,6 +26,9 @@ namespace BlazorSurvey.Components
 
         private bool isReady = false;
 
+        [Parameter]
+        public int SurveyId { get; set; }
+
 
         private async Task TakeSurvey(int surveyId)
         {
@@ -34,10 +37,19 @@ namespace BlazorSurvey.Components
 
         protected override async Task OnInitializedAsync()
         {
-            Random rnd = new Random();
-            var featuredSurveys = await Context.Surveys.Where(x => x.FeaturedSurvey == true).Include(x => x.SurveyOptions).ToListAsync();
+            if (SurveyId != 0)
+            {
+                Survey = await Context.Surveys.Where(x => x.SurveyId == SurveyId).Include(x => x.SurveyOptions)
+                    .FirstOrDefaultAsync();
+            }
+            else
+            {
+                Random rnd = new Random();
+                var featuredSurveys = await Context.Surveys.Where(x => x.FeaturedSurvey == true).Include(x => x.SurveyOptions).ToListAsync();
 
-            Survey = featuredSurveys.OrderBy(x => rnd.Next()).Take(1).FirstOrDefault();
+                Survey = featuredSurveys.OrderBy(x => rnd.Next()).Take(1).FirstOrDefault();
+            }
+           
 
             isReady = true;
         }
