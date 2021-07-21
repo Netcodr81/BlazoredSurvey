@@ -25,11 +25,12 @@ namespace BlazorSurvey.ViewModels
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Survey question is required")]
+        [MaxLength(255, ErrorMessage = "Survey question is too long")]
         public string SurveyQuestion { get; set; }     
 
         public bool FeaturedSurvey { get; set; }
 
-        public List<SelectListItem> SurveyOptions { get; set; }
+        public List<SelectListItem> SurveyOptions { get; set; } = new List<SelectListItem>();
 
         public bool ShowDeleteOption { get; set; } = false;
         public SurveysDbContext Context { get; }
