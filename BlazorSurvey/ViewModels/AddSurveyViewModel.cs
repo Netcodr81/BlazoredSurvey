@@ -52,8 +52,11 @@ namespace BlazorSurvey.ViewModels
             ShowDeleteOption = false;
         }
 
-        public async Task RemoveSurveyOption(int optionId)
+        public void RemoveSurveyOption(int optionId)
         {
+            string description = SurveyOptions.FirstOrDefault(x => x.Value == optionId.ToString()).Text;
+
+            SurveyOptionsToAdd.Remove(SurveyOptionsToAdd.SingleOrDefault(x => x.Description == description));
 
             SurveyOptions.Remove(SurveyOptions.SingleOrDefault(x => x.Value == optionId.ToString()));
 

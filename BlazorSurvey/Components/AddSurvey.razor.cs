@@ -77,8 +77,7 @@ namespace BlazorSurvey.Components
 
             if (!result.Cancelled)
             {
-                var optionNameToRemove = model.SurveyOptions.FirstOrDefault(x => Int32.Parse( x.Value) == id).Text;
-                model.SurveyOptionsToAdd.Remove(model.SurveyOptionsToAdd.FirstOrDefault(x => x.Description == optionNameToRemove));
+                
                 model.RemoveSurveyOption(id);
                 SelectedOption = 0;
                 await JSRuntime.InvokeVoidAsync("selectList.SetSelectedItem", "surveyOptions", "");
