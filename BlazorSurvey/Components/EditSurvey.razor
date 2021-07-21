@@ -188,8 +188,7 @@
         var maxId = SurveyToUpdate.SurveyOptions.Count == 0 ? 1 : Int32.Parse(SurveyToUpdate.SurveyOptions.OrderByDescending(x => x.Value).FirstOrDefault().Value);
         
         var parameters = new ModalParameters();
-        parameters.Add("SurveyId", SurveyToUpdate.SurveyId);
-        parameters.Add("MaxId", maxId);
+        parameters.Add("SurveyId", SurveyToUpdate.SurveyId);        
         
         var formModal = Modal.Show<AddOption>("Add an Option", parameters);
 

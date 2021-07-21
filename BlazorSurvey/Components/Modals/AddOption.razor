@@ -1,18 +1,16 @@
 ﻿<div>
-    <EditForm Model="@optionModel" OnSubmit="TestSave">
+    <EditForm Model="@optionModel" OnValidSubmit="SaveOption">
         <DataAnnotationsValidator />
-        <div class="row justify-content-center">
-            <ValidationSummary />
-        </div>
-        <div class="form-group">
+        <div class="form-group m-3">
             <label class="bs-form-label">Description</label>
             <InputText class="form-control" @bind-Value="@optionModel.Description" />
+            <ValidationMessage For="@(() => optionModel.Description)"/>
         </div>
-
+        <button type="submit" class="btn btn-primary">Add</button>
+        <button @onclick="Cancel" class="btn btn-secondary">Cancel</button>
     </EditForm>
 
-    <button @onclick="TestSave" class="btn btn-primary">Add</button>
-    <button @onclick="Cancel" class="btn btn-secondary">Cancel</button>
+   
 </div>
 
 @code {
@@ -22,38 +20,42 @@
     [Parameter]
     public int SurveyId { get; set; }
 
-    //Just for development reasons
-    [Parameter]
-    public int MaxId { get; set; }
+    [Inject]
+    private SurveysDbContext Context { get; set; }
 
-    private OptionViewModel optionModel = new OptionViewModel();
-    private SurveyOption returnOption = new SurveyOption();
+    private EditContext editContext { get; set; }
+
+    private OptionViewModel optionModel { get; set; } = new OptionViewModel();
+    private SurveyOption model = new SurveyOption();
 
     protected override void OnInitialized()
     {
+
+        editContext = new EditContext(optionModel);
         optionModel.Fk_SurveyId = SurveyId;
     }
 
-    private void SaveOption()
+    private async Task SaveOption()
     {
-        returnOption.Fk_SurveyId = optionModel.Fk_SurveyId;
-        returnOption.Description = optionModel.Description;
-        returnOption.ImagePath = optionModel.ImagePath;
-        returnOption.SurveyOptionId = 14;
-        returnOption.TotalVotes = 0;
+        model.Fk_SurveyId = optionModel.Fk_SurveyId;
+        model.Description = optionModel.Description;
+        model.ImagePath = optionModel.ImagePath;
+        model.TotalVotes = 0;
 
-        Modal.CloseAsync(ModalResult.Ok<SurveyOption>(returnOption));
-    }
+        try
+        {
+            Context.SurveyOptions.Add(model);
+            await Context.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
 
-    private void TestSave()
-    {
-        returnOption.Fk_SurveyId = optionModel.Fk_SurveyId;
-        returnOption.Description = optionModel.Description;
-        returnOption.ImagePath = optionModel.ImagePath;
-        returnOption.SurveyOptionId = MaxId + 1;
-        returnOption.TotalVotes = 0;
+            var ex = e;
+        }
 
-        Modal.CloseAsync(ModalResult.Ok<SurveyOption>(returnOption));
+
+
+        Modal.CloseAsync(ModalResult.Ok<SurveyOption>(model));
     }
 
     void Cancel() => Modal.CancelAsync();
