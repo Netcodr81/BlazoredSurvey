@@ -3,12 +3,21 @@ using BlazorSurvey.ViewModels;
 using SurveyAccessor.Models;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SurveyAccessor.Context;
+using System.Configuration;
 
 namespace BlazorSurvey.Utils
 {
-    public static class Mapper
+    public class Mapper
     {
-        public static Survey EditSurveyToSurvey(EditSurveyViewModel survey)
+        public Mapper(SurveysDbContext context)
+        {
+            Context = context;
+        }
+
+        public SurveysDbContext Context { get; }
+
+        public Survey EditSurveyToSurvey(EditSurveyViewModel survey)
         {
             Survey result = new Survey()
             {
@@ -22,9 +31,9 @@ namespace BlazorSurvey.Utils
             return result;
         }
 
-        public static EditSurveyViewModel SurveyToEditSurveyModel(Survey survey)
+        public EditSurveyViewModel SurveyToEditSurveyModel(Survey survey)
         {
-            EditSurveyViewModel results = new EditSurveyViewModel()
+            EditSurveyViewModel results = new EditSurveyViewModel(Context)
             {
                 SurveyId = survey.SurveyId,
                 SurveyName = survey.SurveyName,
@@ -37,7 +46,7 @@ namespace BlazorSurvey.Utils
             return results;
         }
 
-        public static SurveyViewModel SurveyToSurveyViewModel(Survey survey)
+        public SurveyViewModel SurveyToSurveyViewModel(Survey survey)
         {
             var results = new SurveyViewModel()
             {
@@ -56,7 +65,7 @@ namespace BlazorSurvey.Utils
             return results;
         }
 
-        private static List<SelectListItem> GenerateEditViewModelOptionSelectList(List<SurveyOption> options)
+        private List<SelectListItem> GenerateEditViewModelOptionSelectList(List<SurveyOption> options)
         {
             List<SelectListItem> selectList = new List<SelectListItem>();
 

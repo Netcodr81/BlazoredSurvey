@@ -100,6 +100,9 @@
     [Inject]
     public SurveysDbContext Context { get; set; }
 
+    [Inject]
+    public Mapper mapper { get; set; }
+
     [CascadingParameter]
     IModalService Modal { get; set; }
 
@@ -121,7 +124,7 @@
     {
 
         Survey = await Context.Surveys.Where(x => x.SurveyId == Id).Include(x => x.SurveyOptions).FirstOrDefaultAsync();
-        SurveyToUpdate = Mapper.SurveyToEditSurveyModel(Survey);
+        SurveyToUpdate = mapper.SurveyToEditSurveyModel(Survey);
 
         isReady = true;
     }
@@ -149,7 +152,7 @@
         NavigationManager.NavigateTo("surveylist/edit");
     }
 
-    private async Task UpdateOptionSelection(ChangeEventArgs e)
+    private void UpdateOptionSelection(ChangeEventArgs e)
     {
         var selectedValue = e.Value;
 
@@ -186,10 +189,10 @@
     private async Task AddOption()
     {
         var maxId = SurveyToUpdate.SurveyOptions.Count == 0 ? 1 : Int32.Parse(SurveyToUpdate.SurveyOptions.OrderByDescending(x => x.Value).FirstOrDefault().Value);
-        
+
         var parameters = new ModalParameters();
-        parameters.Add("SurveyId", SurveyToUpdate.SurveyId);        
-        
+        parameters.Add("SurveyId", SurveyToUpdate.SurveyId);
+
         var formModal = Modal.Show<AddOption>("Add an Option", parameters);
 
         var result = await formModal.Result;

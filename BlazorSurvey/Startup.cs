@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blazored.Modal;
+using BlazorSurvey.Utils;
 
 namespace BlazorSurvey
 {
@@ -45,6 +46,7 @@ namespace BlazorSurvey
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddBlazoredModal();
+            services.AddTransient<Mapper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

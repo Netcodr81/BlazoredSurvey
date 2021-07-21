@@ -68,6 +68,9 @@
     public IJSRuntime JSRuntime { get; set; }
 
     [Inject]
+    public Mapper mapper { get; set; }
+
+    [Inject]
     public NavigationManager NavigationManager { get; set; }
 
     private SurveyViewModel SurveyVM = new SurveyViewModel();
@@ -81,7 +84,7 @@
         survey = await Context.Surveys.Where(x => x.SurveyId == Id).Include(x => x.SurveyOptions).FirstOrDefaultAsync();
 
 
-        SurveyVM = Mapper.SurveyToSurveyViewModel(survey);
+        SurveyVM = mapper.SurveyToSurveyViewModel(survey);
 
         isReady = true;
     }

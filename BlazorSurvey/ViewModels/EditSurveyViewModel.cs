@@ -5,11 +5,17 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SurveyAccessor.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorSurvey.ViewModels
 {
     public class EditSurveyViewModel
     {
+        public EditSurveyViewModel(SurveysDbContext context)
+        {
+            Context = context;
+        }
         public int SurveyId { get; set; }
 
         [Required(ErrorMessage="Survey name is required")]
@@ -23,11 +29,10 @@ namespace BlazorSurvey.ViewModels
 
         public bool FeaturedSurvey { get; set; }
 
-
-
         public List<SelectListItem> SurveyOptions { get; set; }
 
         public bool ShowDeleteOption { get; set; } = false;
+        public SurveysDbContext Context { get; }
 
         public void AddSurveyOption(SurveyOption option)
         {
@@ -36,16 +41,36 @@ namespace BlazorSurvey.ViewModels
             ShowDeleteOption = false;
         }
 
-        public void RemoveSurveyOption(int optionId)
+        public async Task RemoveSurveyOption(int optionId)
         {
+            var survey = await Context.Surveys.Where(x => x.SurveyId == SurveyId).Include(x => x.SurveyOptions).FirstOrDefaultAsync();
+            var optionToRemove = survey.SurveyOptions.FirstOrDefault(x => x.SurveyOptionId == optionId);
+
+            survey.TotalVotes -= optionToRemove.TotalVotes;
+            
+            survey.SurveyOptions.Remove(optionToRemove);
+
+            Context.Attach(survey);
+            Context.Entry(survey).State = EntityState.Modified;
+
+            try
+            {
+                await Context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+
+                var ex = e;
+            }
+
             SurveyOptions.Remove(SurveyOptions.SingleOrDefault(x => x.Value == optionId.ToString()));
 
             if (SurveyOptions.Count == 1)
             {
-                SurveyOptions.First().Text = "Please add an option...";
-                SurveyOptions.ForEach(x => x.Selected = false);
+                SurveyOptions.First().Text = "Please add an option...";              
 
             }
+
             ShowDeleteOption = false;
         }
     }
