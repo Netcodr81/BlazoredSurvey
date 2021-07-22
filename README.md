@@ -13,3 +13,6 @@
 * The ApplicationDbContext is used for authorization/authentication. It's not being used right now so you don't necessarily have to run the update for the ApplicaitonDbContext in order to get the 
   application to run
 
+# Third Party Blazor Packages being used
+* Blazored Modal - [Blazored Modal - Github](https://github.com/Blazored/Modal)
+* Blazored Toast - [Blazored Toast -Github] (https://github.com/Blazored/Toast)
