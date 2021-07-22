@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Components\HtmlComponents\**" />
+    <Content Remove="Components\HtmlComponents\**" />
+    <EmbeddedResource Remove="Components\HtmlComponents\**" />
+    <None Remove="Components\HtmlComponents\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Data\Images\default.jpg" />
   </ItemGroup>
 
@@ -41,10 +48,6 @@
     <Content Update="wwwroot\images\default.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Components\HtmlComponents\" />
   </ItemGroup>
 
 </Project>

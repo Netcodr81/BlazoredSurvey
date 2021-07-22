@@ -44,6 +44,20 @@ namespace BlazorSurvey.ViewModels
 
 
         #region Methods
+
+        public Survey GenerateSurveyToSave()
+        {
+            return new Survey()
+            {
+                SurveyName = this.SurveyName,
+                Description = this.Description,
+                SurveyQuestion = this.SurveyQuestion,
+                TotalVotes = 0,
+                TotalTimesTaken = 0,
+                CreatedOn = DateTime.Now,
+                SurveyOptions = SurveyOptionsToAdd
+            };
+        }
         public void AddSurveyOption(SurveyOption option, int maxId)
         {
             SelectListItem optionToAdd = new SelectListItem { Selected = false, Text = option.Description, Value = maxId.ToString() };

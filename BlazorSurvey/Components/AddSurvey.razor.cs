@@ -42,6 +42,18 @@ namespace BlazorSurvey.Components
 
         private async Task SaveSurvey()
         {
+            Context.Surveys.Add(model.GenerateSurveyToSave());
+
+            try
+            {
+                await Context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                var exception = ex;
+            }
+
             await JSRuntime.InvokeVoidAsync("alert", "Survey Saved");
             NavigationManager.NavigateTo("surveylist/edit");
         }
