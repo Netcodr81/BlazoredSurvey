@@ -25,16 +25,26 @@
                         </tr>
                     </thead>
                     <tbody>
+                    @if (SurveyList.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="5">No surveys to display</td>
+                        </tr>
+                    }
+                    else
+                    {
                         @foreach (var survey in SurveyList)
                         {
                             <tr>
                                 <td><button class="btn btn-sm btn-primary" @onclick="() => EditSurvey(survey.SurveyId)">Edit</button></td>
-                                <td><button class="btn btn-sm btn-danger" @onclick="()=> DeleteSurvey(survey.SurveyId)">Delete</button></td>
+                                <td><button class="btn btn-sm btn-danger" @onclick="() => DeleteSurvey(survey.SurveyId)">Delete</button></td>
                                 <td>@survey.SurveyName</td>
                                 <td>@survey.Description</td>
                                 <td>@survey.TotalTimesTaken</td>
                             </tr>
                         }
+                    }
+                  
                     </tbody>
 
                 </table>

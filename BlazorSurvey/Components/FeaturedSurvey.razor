@@ -6,31 +6,44 @@
     <div class="card-body">
         @if (!isReady)
         {
-            <p>Sorry, there is no featured survey right now</p>
+            <p>Loading...</p>
         }
-        else
+        else if (Survey != null)
         {
             <h5 class="card-title">@Survey.SurveyName</h5>
-                 
+
             {
                 <table class="table-borderless">
                     <tbody>
+
                         @foreach (var survey in Survey.SurveyOptions)
                         {
-                            <SurveyOptionItem Item="@survey" TotalSurveyVotes="@Survey.TotalVotes"/>                        
+                            <SurveyOptionItem Item="@survey" TotalSurveyVotes="@Survey.TotalVotes" />
                         }
 
                     </tbody>
                 </table>
             }
-    <div class="mt-3">
-        <button href="#" class="btn btn-outline-dark" @onclick="()=> TakeSurvey(Survey.SurveyId)">Take Survey</button>
-    </div>
-            
+            <div class="mt-3">
+                <button href="#" class="btn btn-outline-dark" @onclick="()=> TakeSurvey(Survey.SurveyId)">Take Survey</button>
+            </div>
+
+        }
+        else
+        {
+            <p></p>
         }
     </div>
     <div class="card-footer text-muted">
-           <p>Created on @(Survey == null ? "" : Survey.CreatedOn.ToShortDateString())</p>              
+        @if (Survey != null)
+        {
+            <p>Created on @(Survey == null ? "" : Survey.CreatedOn.ToShortDateString())</p>
+        }
+        else
+        {
+            <p></p>
+        }
+
     </div>
 </div>
 

@@ -20,6 +20,7 @@ namespace BlazorSurvey.Pages
         [Inject]
         public SurveysDbContext Context { get; set; }
 
+
         public async Task TakeRandomSurvey()
         {
             Random rnd = new Random();
@@ -27,7 +28,11 @@ namespace BlazorSurvey.Pages
 
             var randomSurvey = surveyList.OrderBy(x => rnd.Next()).Take(1).FirstOrDefault();
 
-            NavigationManager.NavigateTo($"survey/{randomSurvey.SurveyId}");
+            if (randomSurvey != null)
+            {
+                NavigationManager.NavigateTo($"survey/{randomSurvey.SurveyId}");
+            }
+           
         }
 
         public void ViewSurveys()

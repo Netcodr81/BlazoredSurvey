@@ -25,6 +25,14 @@
                         </tr>
                     </thead>
                     <tbody>
+                    @if (SurveyList.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="5">No surveys to display</td>
+                        </tr>
+                    }
+                    else
+                    {
                         @foreach (var survey in SurveyList)
                         {
                             <tr>
@@ -35,6 +43,8 @@
                                 <td>@survey.TotalTimesTaken</td>
                             </tr>
                         }
+                    }
+                  
                     </tbody>
                     
                 </table>

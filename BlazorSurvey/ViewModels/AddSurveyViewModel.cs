@@ -52,6 +52,7 @@ namespace BlazorSurvey.ViewModels
                 SurveyName = this.SurveyName,
                 Description = this.Description,
                 SurveyQuestion = this.SurveyQuestion,
+                FeaturedSurvey = this.FeaturedSurvey,
                 TotalVotes = 0,
                 TotalTimesTaken = 0,
                 CreatedOn = DateTime.Now,
@@ -70,9 +71,9 @@ namespace BlazorSurvey.ViewModels
         {
             string description = SurveyOptions.FirstOrDefault(x => x.Value == optionId.ToString()).Text;
 
-            SurveyOptionsToAdd.Remove(SurveyOptionsToAdd.SingleOrDefault(x => x.Description == description));
+            SurveyOptionsToAdd.Remove(SurveyOptionsToAdd.FirstOrDefault(x => x.Description == description));
 
-            SurveyOptions.Remove(SurveyOptions.SingleOrDefault(x => x.Value == optionId.ToString()));
+            SurveyOptions.Remove(SurveyOptions.FirstOrDefault(x => x.Value == optionId.ToString()));
 
             if (SurveyOptions.Count == 1)
             {
@@ -83,7 +84,12 @@ namespace BlazorSurvey.ViewModels
             ShowDeleteOption = false;
         }
 
-
+        public int GetMaxId()
+        {
+            var maxId = this.SurveyOptions.Count == 1 ? 0 : Int32.Parse(this.SurveyOptions.OrderByDescending(x => x.Value).FirstOrDefault().Value);
+            maxId = maxId += 1;
+            return maxId;
+        }
         #endregion
 
 

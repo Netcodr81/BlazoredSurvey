@@ -100,8 +100,7 @@ namespace BlazorSurvey.Components
 
         private async Task AddOption()
         {
-            var maxId = model.SurveyOptions.Count == 1 ? 1 : Int32.Parse(model.SurveyOptions.OrderByDescending(x => x.Value).FirstOrDefault().Value);
-            
+            var maxId = model.GetMaxId();
             var formModal = Modal.Show<NewSurveyOption>("Add an Option");
 
             var result = await formModal.Result;
