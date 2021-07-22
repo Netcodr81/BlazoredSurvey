@@ -11,73 +11,77 @@
             }
             else
             {
-                <EditForm Model="SurveyToUpdate" OnValidSubmit="UpdateSurvey">
-                    <DataAnnotationsValidator />
-                    <div class="row justify-content-center">
-                        <ValidationSummary />
-                    </div>
+                <div class="row h-100 justify-content-center align-items-center">
+                    <div class="col-10 col-md-8 col-lg-6">
+                        <EditForm Model="SurveyToUpdate" OnValidSubmit="UpdateSurvey">
+                            <DataAnnotationsValidator />
+                            <div class="row justify-content-center">
+                                <ValidationSummary />
+                            </div>
 
 
 
-                    <div class="form-group row">
-                        <div class="col-6">
-                            <label class="bs-form-label" for="surveyName">Survey Name</label>
-                            <InputText id="surveyName" class="form-control" @bind-Value="@SurveyToUpdate.SurveyName" />
-                            <ValidationMessage For="@(() => SurveyToUpdate.SurveyName)" />
-                        </div>
-                    </div>
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <label class="bs-form-label" for="surveyName">Survey Name</label>
+                                    <InputText id="surveyName" class="form-control" @bind-Value="@SurveyToUpdate.SurveyName" />
+                                    <ValidationMessage For="@(() => SurveyToUpdate.SurveyName)" />
+                                </div>
+                            </div>
 
-                    <div class="form-group row">
-                        <div class="col-6">
-                            <label class="bs-form-label" for="surveyDescription">Description</label>
-                            <InputText id="surveyDescription" class="form-control" @bind-Value="@SurveyToUpdate.Description" />
-                            <ValidationMessage For="@(() => SurveyToUpdate.Description)" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-6">
-                            <label class="bs-form-label" for="surveyQuestion">Survey Question</label>
-                            <InputText id="surveyQuestion" class="form-control" @bind-Value="@SurveyToUpdate.SurveyQuestion" />
-                            <ValidationMessage For="@(() => SurveyToUpdate.SurveyQuestion)" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-6">
-                            <label class="bs-form-label" for="surveyOptions">Survey Options</label>
-                         
-                            <select class="form-control" id="surveyOptions"  @onchange="UpdateOptionSelection">
-                                    @foreach (var option in SurveyToUpdate.SurveyOptions)
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <label class="bs-form-label" for="surveyDescription">Description</label>
+                                    <InputText id="surveyDescription" class="form-control" @bind-Value="@SurveyToUpdate.Description" />
+                                    <ValidationMessage For="@(() => SurveyToUpdate.Description)" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <label class="bs-form-label" for="surveyQuestion">Survey Question</label>
+                                    <InputTextArea rows="10" id="surveyQuestion" class="form-control" @bind-Value="@SurveyToUpdate.SurveyQuestion" />
+                                    <ValidationMessage For="@(() => SurveyToUpdate.SurveyQuestion)" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-7">
+                                    <label class="bs-form-label" for="surveyOptions">Survey Options</label>
+
+                                    <select class="form-control" id="surveyOptions" @onchange="UpdateOptionSelection">
+                                        @foreach (var option in SurveyToUpdate.SurveyOptions)
+                                        {
+                                            <option value="@option.Value">@option.Text</option>
+                                        }
+                                    </select>
+
+                                </div>
+                                <div class="col-4 d-flex flex-row align-items-end mb-1">
+                                    <input type="button" class="btn btn-sm btn-primary mr-2" value="Add Option" @onclick="AddOption" />
+                                    @if (SurveyToUpdate.ShowDeleteOption)
                                     {
-                                        <option value="@option.Value">@option.Text</option>
+                                        <input type="button" class="btn btn-sm btn-danger" value="Delete Option" @onclick="@(() => DeleteOption(SelectedOption))" />
                                     }
-                                </select>
 
-                        </div>
-                        <div class="col-4 d-flex flex-row align-items-end mb-1">
-                            <input type="button" class="btn btn-sm btn-primary mr-2" value="Add Option" @onclick="AddOption" />
-                            @if (SurveyToUpdate.ShowDeleteOption)
-                            {
-                                <input type="button" class="btn btn-sm btn-danger" value="Delete Option" @onclick="@(() => DeleteOption(SelectedOption))" />
-                            }
+                                </div>
+                            </div>
+                            <div class="form-group form-check row">
+                                <div class="d-flex align-items-start">
+                                    <InputCheckbox class="mr-3 align-self-center mb-1" @bind-Value="@SurveyToUpdate.FeaturedSurvey" /> <label class="form-check-label">Featured Survey</label>
+                                </div>
 
-                        </div>
+                            </div>
+
+                            <div class="form-group row my-3 ml-3">
+                                <div class="col-12">
+                                    <input type="submit" class="btn btn-success" value="Update" />
+                                    <input type="button" class="btn btn-danger" value="Cancel" @onclick="CancelUpdate" />
+                                </div>
+
+                            </div>
+
+                        </EditForm>
                     </div>
-                    <div class="form-group form-check row">
-                        <div class="col-6">
-                            <InputCheckbox @bind-Value="@SurveyToUpdate.FeaturedSurvey" /> <label class="form-check-label">Featured Survey</label>
-                        </div>
-
-                    </div>
-
-                    <div class="form-group row my-3 ml-3">
-                        <div class="col-6">
-                            <input type="submit" class="btn btn-success" value="Update" />
-                            <input type="button" class="btn btn-danger" value="Cancel" @onclick="CancelUpdate" />
-                        </div>
-
-                    </div>
-
-                </EditForm>
+                </div>
             }
 
         </div>
