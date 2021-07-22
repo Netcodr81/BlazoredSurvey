@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Blazored.Modal;
+using Blazored.Modal.Services;
+using BlazorSurvey.Components.Modals;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using SurveyAccessor.Context;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BlazorSurvey.Pages
@@ -12,6 +17,9 @@ namespace BlazorSurvey.Pages
 
         [Inject]
         public SurveysDbContext Context { get; set; }
+
+        [CascadingParameter]
+        IModalService Modal { get; set; }
 
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
@@ -34,6 +42,41 @@ namespace BlazorSurvey.Pages
             NavigationManager.NavigateTo($"survey/edit/{id}");
         }
 
+        private async Task DeleteSurvey(int id)
+        {
+            ModalParameters parameters = new ModalParameters();
+            parameters.Add("Message", "Are you sure you want to delete this survey?");
+            var formModal = Modal.Show<Confirm>("Delete Survey", parameters);
+
+            var result = await formModal.Result;
+
+            if (!result.Cancelled)
+            {
+                var surveyToDelete = await Context.Surveys.Where(x => x.SurveyId == id).Include(x => x.SurveyOptions).FirstOrDefaultAsync();
+
+                if (surveyToDelete != null)
+                {
+                    Context.Attach(surveyToDelete);
+                    Context.Entry(surveyToDelete).State = EntityState.Deleted;
+
+                    try
+                    {
+                        await Context.SaveChangesAsync();
+
+                        SurveyList = await Context.Surveys.ToListAsync();
+                        await JSRuntime.InvokeVoidAsync("alert", "Survey Deleted");
+                    }
+                    catch (Exception ex)
+                    {
+
+                        var exception = ex;
+                    }
+                }
+            }
+
+
+            NavigationManager.NavigateTo($"surveylist/edit");
+        }
 
     }
 }

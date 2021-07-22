@@ -18,6 +18,7 @@
                     <thead>
                         <tr>
                             <th></th>
+                            <th></th>
                             <th>Survey Name</th>
                             <th>Description</th>
                             <th>Times Taken</th>
@@ -28,6 +29,7 @@
                         {
                             <tr>
                                 <td><button class="btn btn-sm btn-primary" @onclick="() => EditSurvey(survey.SurveyId)">Edit</button></td>
+                                <td><button class="btn btn-sm btn-danger" @onclick="()=> DeleteSurvey(survey.SurveyId)">Delete</button></td>
                                 <td>@survey.SurveyName</td>
                                 <td>@survey.Description</td>
                                 <td>@survey.TotalTimesTaken</td>
