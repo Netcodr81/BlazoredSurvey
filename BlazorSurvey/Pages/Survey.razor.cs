@@ -6,6 +6,7 @@ using Microsoft.JSInterop;
 using SurveyAccessor.Context;
 using System.Linq;
 using System.Threading.Tasks;
+using Blazored.Toast.Services;
 
 namespace BlazorSurvey.Pages
 {
@@ -27,6 +28,9 @@ namespace BlazorSurvey.Pages
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
+
+        [Inject]
+        public IToastService ToastService { get; set; }
 
         private SurveyViewModel SurveyVM = new SurveyViewModel();
 
@@ -60,7 +64,7 @@ namespace BlazorSurvey.Pages
 
             await Context.SaveChangesAsync();
 
-            await JSRuntime.InvokeVoidAsync("alert", "Thank you for taking the survey");
+            ToastService.ShowInfo("Thank you for taking the survey", "Thank You");
 
             NavigationManager.NavigateTo("/");
 

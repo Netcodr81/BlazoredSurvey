@@ -11,6 +11,7 @@ using SurveyAccessor.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Blazored.Toast.Services;
 
 namespace BlazorSurvey.Components
 {
@@ -32,6 +33,9 @@ namespace BlazorSurvey.Components
 
         [CascadingParameter]
         IModalService Modal { get; set; }
+
+        [Inject]
+        public IToastService ToastService { get; set; }
 
         [CascadingParameter]
         public int Id { get; set; }
@@ -66,7 +70,8 @@ namespace BlazorSurvey.Components
 
             await Context.SaveChangesAsync();
 
-            await JSRuntime.InvokeVoidAsync("alert", "Survey Updated");
+            //await JSRuntime.InvokeVoidAsync("alert", "Survey Updated");
+            ToastService.ShowSuccess("","Survey Updated");
             NavigationManager.NavigateTo("surveylist/edit");
         }
 

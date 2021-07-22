@@ -92,3 +92,7 @@ a, .btn-link {
         display:flex;
         align-content: start;
     }
+
+    .blazored-toast-container {
+        z-index: 9999;
+    }

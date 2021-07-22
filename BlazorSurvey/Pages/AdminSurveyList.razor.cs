@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blazored.Toast.Services;
 
 namespace BlazorSurvey.Pages
 {
@@ -28,6 +29,9 @@ namespace BlazorSurvey.Pages
         public NavigationManager NavigationManager { get; set; }
 
         public List<SurveyAccessor.Models.Survey> SurveyList { get; set; }
+
+        [Inject]
+        public IToastService ToastService { get; set; }
 
         private bool isReady = false;
 
@@ -64,12 +68,12 @@ namespace BlazorSurvey.Pages
                         await Context.SaveChangesAsync();
 
                         SurveyList = await Context.Surveys.ToListAsync();
-                        await JSRuntime.InvokeVoidAsync("alert", "Survey Deleted");
+                        ToastService.ShowSuccess("", "Survey Deleted");
                     }
                     catch (Exception ex)
                     {
 
-                        var exception = ex;
+                        ToastService.ShowError("", "An error occurred while deleting this survey");
                     }
                 }
             }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
+using Blazored.Toast.Services;
 using BlazorSurvey.Components.Modals;
 using BlazorSurvey.Utils;
 using BlazorSurvey.ViewModels;
@@ -31,6 +32,9 @@ namespace BlazorSurvey.Components
 
         [Inject]
         public Mapper mapper { get; set; }
+
+        [Inject]
+        public IToastService ToastService { get; set; }
 
         [CascadingParameter]
         IModalService Modal { get; set; }
@@ -74,6 +78,7 @@ namespace BlazorSurvey.Components
             {
                 
                 model.RemoveSurveyOption(id);
+                ToastService.ShowSuccess("","Option Deleted");
             }
         }
 
@@ -89,7 +94,9 @@ namespace BlazorSurvey.Components
                 var results = result.Data;
                 model.AddSurveyOption((SurveyOption)result.Data, maxId);
                 model.SurveyOptionsToAdd.Add((SurveyOption)result.Data);
-             
+
+                ToastService.ShowSuccess("","Option Added");
+
             }
         }
 

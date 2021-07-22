@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blazored.Modal;
+using Blazored.Toast;
 using BlazorSurvey.Utils;
 
 namespace BlazorSurvey
@@ -47,6 +48,7 @@ namespace BlazorSurvey
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddBlazoredModal();
             services.AddTransient<Mapper>();
+            services.AddBlazoredToast();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
