@@ -15,7 +15,7 @@ namespace BlazorSurvey.ViewModels
     {
         public AddSurveyViewModel()
         {
-            SurveyOptions.Add(new SelectListItem() { Text = "Please add an option...", Value = "", Selected = true });
+            //SurveyOptions.Add(new SelectListItem() { Text = "Please add an option...", Value = "", Selected = true });
         }
 
         #region Properties
@@ -75,18 +75,18 @@ namespace BlazorSurvey.ViewModels
 
             SurveyOptions.Remove(SurveyOptions.FirstOrDefault(x => x.Value == optionId.ToString()));
 
-            if (SurveyOptions.Count == 1)
-            {
-                SurveyOptions.First().Text = "Please add an option...";
+            //if (SurveyOptions.Count == 1)
+            //{
+            //    SurveyOptions.First().Text = "Please add an option...";
 
-            }
+            //}
 
             ShowDeleteOption = false;
         }
 
         public int GetMaxId()
         {
-            var maxId = this.SurveyOptions.Count == 1 ? 0 : Int32.Parse(this.SurveyOptions.OrderByDescending(x => x.Value).FirstOrDefault().Value);
+            var maxId = this.SurveyOptions.Count == 0 ? 0 : Int32.Parse(this.SurveyOptions.OrderByDescending(x => x.Value).FirstOrDefault().Value);
             maxId = maxId += 1;
             return maxId;
         }

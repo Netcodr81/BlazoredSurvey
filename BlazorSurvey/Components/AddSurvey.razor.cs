@@ -20,7 +20,6 @@ namespace BlazorSurvey.Components
 
         private bool isReady = true;
 
-
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
@@ -35,8 +34,6 @@ namespace BlazorSurvey.Components
 
         [CascadingParameter]
         IModalService Modal { get; set; }
-
-        private static int SelectedOption { get; set; } = 0;
 
         private AddSurveyViewModel model = new AddSurveyViewModel();
 
@@ -63,21 +60,7 @@ namespace BlazorSurvey.Components
             NavigationManager.NavigateTo("/");
         }
 
-        private void UpdateOptionSelection(ChangeEventArgs e)
-        {
-            var selectedValue = e.Value;
-
-            if (!string.IsNullOrWhiteSpace(selectedValue.ToString()))
-            {
-                model.ShowDeleteOption = true;
-                SelectedOption = Int32.Parse(selectedValue.ToString());
-            }
-            else
-            {
-                model.ShowDeleteOption = false;
-                SelectedOption = 0;
-            }
-        }
+    
 
         private async Task DeleteOption(int id)
         {
@@ -91,10 +74,6 @@ namespace BlazorSurvey.Components
             {
                 
                 model.RemoveSurveyOption(id);
-                SelectedOption = 0;
-                await JSRuntime.InvokeVoidAsync("selectList.SetSelectedItem", "surveyOptions", "");
-
-
             }
         }
 
@@ -110,8 +89,7 @@ namespace BlazorSurvey.Components
                 var results = result.Data;
                 model.AddSurveyOption((SurveyOption)result.Data, maxId);
                 model.SurveyOptionsToAdd.Add((SurveyOption)result.Data);
-                model.SurveyOptions.First().Text = "Please select an option...";
-                await JSRuntime.InvokeVoidAsync("selectList.SetSelectedItem", "surveyOptions", "");
+             
             }
         }
 

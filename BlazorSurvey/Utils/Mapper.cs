@@ -69,14 +69,14 @@ namespace BlazorSurvey.Utils
         {
             List<SelectListItem> selectList = new List<SelectListItem>();
 
-            if (options.Count == 0)
-            {
-                selectList.Add(new SelectListItem { Text = "Please add an option...", Value = "", Selected = true });
-            }
-            else
-            {
-                selectList.Add(new SelectListItem { Text = "Select an option...", Value = "", Selected = true });
-            }
+            //if (options.Count == 0)
+            //{
+            //    selectList.Add(new SelectListItem { Text = "Please add an option...", Value = "", Selected = true });
+            //}
+            //else
+            //{
+            //    selectList.Add(new SelectListItem { Text = "Select an option...", Value = "", Selected = true });
+            //}
            
 
             foreach (var surveyOption in options)

@@ -15,12 +15,7 @@
                     <div class="col-10 col-md-8 col-lg-6">
                         <EditForm Model="SurveyToUpdate" OnValidSubmit="UpdateSurvey">
                             <DataAnnotationsValidator />
-                            <div class="row justify-content-center">
-                                <ValidationSummary />
-                            </div>
-
-
-
+                        
                             <div class="form-group row">
                                 <div class="col-12">
                                     <label class="bs-form-label" for="surveyName">Survey Name</label>
@@ -44,24 +39,36 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <div class="col-7">
-                                    <label class="bs-form-label" for="surveyOptions">Survey Options</label>
-
-                                    <select class="form-control" id="surveyOptions" @onchange="UpdateOptionSelection">
-                                        @foreach (var option in SurveyToUpdate.SurveyOptions)
+                                <div class="col-12">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col"><button type="button" class="btn btn-sm btn-primary" @onclick="AddOption">Add Option</button></th>
+                                            <th scope="col">Option</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @if (SurveyToUpdate.SurveyOptions.Count == 0)
                                         {
-                                            <option value="@option.Value">@option.Text</option>
+                                            <tr>
+                                                <td colspan="2">Please add at least two options</td>
+                                            </tr>
                                         }
-                                    </select>
-
-                                </div>
-                                <div class="col-4 d-flex flex-row align-items-end mb-1">
-                                    <input type="button" class="btn btn-sm btn-primary mr-2" value="Add Option" @onclick="AddOption" />
-                                    @if (SurveyToUpdate.ShowDeleteOption)
-                                    {
-                                        <input type="button" class="btn btn-sm btn-danger" value="Delete Option" @onclick="@(() => DeleteOption(SelectedOption))" />
-                                    }
-
+                                        else
+                                        {
+                                            @foreach (var option in SurveyToUpdate.SurveyOptions)
+                                            {
+                                                <tr>
+                                                    <td><button type="button" class="btn btn-danger btn-sm" @onclick="(()=> DeleteOption(Int32.Parse(option.Value)))">Delete</button></td>
+                                                    <td>@option.Text</td>
+                                                </tr>
+                                            }
+                                        }
+                                        </tbody>
+                                    </table>
+                                    <div class="justify-content-center">
+                                        <ValidationMessage For="@(() => SurveyToUpdate.SurveyOptions)" />
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group form-check row">

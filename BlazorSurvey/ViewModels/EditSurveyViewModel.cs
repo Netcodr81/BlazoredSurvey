@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using BlazorSurvey.Utils.CustomValidation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SurveyAccessor.Context;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,7 @@ namespace BlazorSurvey.ViewModels
 
         public bool FeaturedSurvey { get; set; }
 
+        [RequiredNumberOfSelectItems(RequiredNumberOfRecords = 2, ErrorMessage = "At least 2 options are required")]
         public List<SelectListItem> SurveyOptions { get; set; } = new List<SelectListItem>();
 
         public bool ShowDeleteOption { get; set; } = false;
@@ -48,8 +50,9 @@ namespace BlazorSurvey.ViewModels
             var optionToRemove = survey.SurveyOptions.FirstOrDefault(x => x.SurveyOptionId == optionId);
 
             survey.TotalVotes -= optionToRemove.TotalVotes;
-            
+
             survey.SurveyOptions.Remove(optionToRemove);
+            //SurveyOptions.Remove(SurveyOptions.FirstOrDefault(x => x.Value == optionId.ToString()));
 
             Context.Attach(survey);
             Context.Entry(survey).State = EntityState.Modified;
@@ -64,13 +67,13 @@ namespace BlazorSurvey.ViewModels
                 var ex = e;
             }
 
-            SurveyOptions.Remove(SurveyOptions.SingleOrDefault(x => x.Value == optionId.ToString()));
+            SurveyOptions.Remove(SurveyOptions.FirstOrDefault(x => x.Value == optionId.ToString()));
 
-            if (SurveyOptions.Count == 1)
-            {
-                SurveyOptions.First().Text = "Please add an option...";              
+            //if (SurveyOptions.Count == 1)
+            //{
+            //    SurveyOptions.First().Text = "Please add an option...";              
 
-            }
+            //}
 
             ShowDeleteOption = false;
         }

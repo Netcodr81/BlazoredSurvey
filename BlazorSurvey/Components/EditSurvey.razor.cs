@@ -42,11 +42,6 @@ namespace BlazorSurvey.Components
 
         private EditSurveyViewModel SurveyToUpdate { get; set; }
 
-
-        private bool ShowDeleteOption { get; set; } = false;
-
-        private static int SelectedOption { get; set; } = 0;
-
         protected override async Task OnInitializedAsync()
         {
 
@@ -72,27 +67,12 @@ namespace BlazorSurvey.Components
             await Context.SaveChangesAsync();
 
             await JSRuntime.InvokeVoidAsync("alert", "Survey Updated");
+            NavigationManager.NavigateTo("surveylist/edit");
         }
 
         private void CancelUpdate()
         {
             NavigationManager.NavigateTo("surveylist/edit");
-        }
-
-        private void UpdateOptionSelection(ChangeEventArgs e)
-        {
-            var selectedValue = e.Value;
-
-            if (!string.IsNullOrWhiteSpace(selectedValue.ToString()))
-            {
-                SurveyToUpdate.ShowDeleteOption = true;
-                SelectedOption = Int32.Parse(selectedValue.ToString());
-            }
-            else
-            {
-                SurveyToUpdate.ShowDeleteOption = false;
-                SelectedOption = 0;
-            }
         }
 
         private async Task DeleteOption(int id)
@@ -105,11 +85,7 @@ namespace BlazorSurvey.Components
 
             if (!result.Cancelled)
             {
-                SurveyToUpdate.RemoveSurveyOption(id);
-                SelectedOption = 0;
-                await JSRuntime.InvokeVoidAsync("selectList.SetSelectedItem", "surveyOptions", "");
-
-
+                await SurveyToUpdate.RemoveSurveyOption(id);
             }
         }
 
@@ -128,7 +104,6 @@ namespace BlazorSurvey.Components
             {
                 var results = result.Data;
                 SurveyToUpdate.AddSurveyOption((SurveyOption)result.Data);
-                await JSRuntime.InvokeVoidAsync("selectList.SetSelectedItem", "surveyOptions", "");
             }
         }
 

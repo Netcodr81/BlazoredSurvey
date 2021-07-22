@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorSurvey", "BlazorSurve
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SurveyAccessor", "SurveyAccessor\SurveyAccessor.csproj", "{ABDACA06-04C0-4A32-888C-3048F7A2AF53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SurveyManager", "SurveyManager\SurveyManager.csproj", "{D6826AE1-D89C-4EC5-A793-BE1FF4C46433}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SurveyManager", "SurveyManager\SurveyManager.csproj", "{D6826AE1-D89C-4EC5-A793-BE1FF4C46433}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
