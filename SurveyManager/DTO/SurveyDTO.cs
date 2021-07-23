@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using SurveyManager.Contracts;
 
-namespace SurveyAccessor.Models
+namespace SurveyManager.DTO
 {
-    [Table("Surveys")]
-    public class Survey
+    public class SurveyDTO : ISurveyDTO
     {
         public int SurveyId { get; set; }
         public string SurveyName { get; set; }
-        public string Description { get; set; }
+        public string Description { get; set; }     
 
         public string SurveyQuestion { get; set; }
 
@@ -24,6 +21,8 @@ namespace SurveyAccessor.Models
 
         public DateTime CreatedOn { get; set; }
 
-        public ICollection<SurveyOption> SurveyOptions { get; set; }
+        public List<SurveyOptionDTO> SurveyOptions { get; set; }
+
+       
     }
 }

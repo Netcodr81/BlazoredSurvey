@@ -16,6 +16,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blazored.Modal;
+using Blazored.Toast;
+using BlazorSurvey.Utils;
+using SurveyManager.Contracts;
+using SurveyManager;
 
 namespace BlazorSurvey
 {
@@ -33,17 +38,20 @@ namespace BlazorSurvey
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("UsersDb")));
+                options.UseSqlServer(Configuration.GetConnectionString("UsersDb")), ServiceLifetime.Transient);
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddDbContext<SurveysDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SurveysDb")));
+            services.AddDbContext<SurveysDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SurveysDb")), ServiceLifetime.Transient);
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddSingleton<WeatherForecastService>();
+            services.AddBlazoredModal();
+            services.AddTransient<Mapper>();
+            services.AddBlazoredToast();
+            services.AddTransient<ISurveyManager, SurveyManager.SurveyManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

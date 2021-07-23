@@ -1,0 +1,16 @@
+﻿@page "/survey/add"
+@page "/survey/edit/{id:int}"
+
+@if (Id == 0)
+{
+    <AddSurvey />
+}
+else
+{
+    <CascadingValue Value="@Id">
+        <EditSurvey />
+    </CascadingValue>
+
+}
+
+

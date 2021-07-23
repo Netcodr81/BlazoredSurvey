@@ -1,0 +1,24 @@
+﻿<nav class="navbar navbar-expand-md navbar-dark main-navbar-background sticky-top">
+    <NavLink href="/" Match="NavLinkMatch.All" class="navbar-brand">BlazorBuilt Survey</NavLink>   
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navb" aria-expanded="true">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div id="navb" class="navbar-collapse collapse hide">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="surveys">Surveys</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="surveylist/edit">Edit Surveys</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="survey/add">Add Survey</a>
+            </li>
+        </ul>
+        @*Uncomment the LoginDisplay when ready for Authentication/Authorization*@
+       @*<LoginDisplay/>*@
+    </div>
+</nav>

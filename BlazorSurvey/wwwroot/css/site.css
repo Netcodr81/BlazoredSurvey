@@ -1,9 +1,27 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+/* 
+ light-red : #bc153b
+ Navbar-red : #96102f
+ Forest Green: #5CDB95
+ Tan : #907163
+ Sand : #379683
+
+
+*/
+
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #000;
+    margin: 0;
+    padding: 0;
 }
 
+body {
+    height: 100vh;
+    width:100vw;
+}
 a, .btn-link {
     color: #0366d6;
 }
@@ -30,6 +48,22 @@ a, .btn-link {
     color: red;
 }
 
+.authorization-link {
+    color: #fff;   
+}
+
+.fill {
+    min-height: 100%;
+    height: 100%;
+}
+
+.authorization-link:hover{
+    color: rgba(255,255,255,.5)
+}
+.main-navbar-background {
+    background-color: #96102f;
+    border-bottom: 2px solid #bc153b;
+}
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
@@ -47,4 +81,18 @@ a, .btn-link {
         position: absolute;
         right: 0.75rem;
         top: 0.5rem;
+    }
+
+    .featured-progress-bar{
+        background: #bc153b;
+    }
+
+    .bs-form-label{
+        width: 100%;
+        display:flex;
+        align-content: start;
+    }
+
+    .blazored-toast-container {
+        z-index: 9999;
     }

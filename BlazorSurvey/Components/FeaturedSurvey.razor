@@ -1,0 +1,51 @@
+﻿
+<div class="card text-center h-100">
+    <div class="card-header">
+        Featured Survey
+    </div>
+    <div class="card-body">
+        @if (!isReady)
+        {
+            <p>Loading...</p>
+        }
+        else if (Survey != null)
+        {
+            <h5 class="card-title">@Survey.SurveyName</h5>
+
+            {
+                <table class="table-borderless">
+                    <tbody>
+
+                        @foreach (var option in Survey.SurveyOptions)
+                        {
+                            <SurveyOptionItem Item="@option" TotalSurveyVotes="@Survey.TotalVotes" />
+                        }
+
+                    </tbody>
+                </table>
+            }
+            <div class="mt-3">
+                <button href="#" class="btn btn-outline-dark" @onclick="()=> TakeSurvey(Survey.SurveyId)">Take Survey</button>
+            </div>
+
+        }
+        else
+        {
+            <p></p>
+        }
+    </div>
+    <div class="card-footer text-muted">
+        @if (Survey != null)
+        {
+            <p>Created on @(Survey == null ? "" : Survey.CreatedOn.ToShortDateString())</p>
+        }
+        else
+        {
+            <p></p>
+        }
+
+    </div>
+</div>
+
+
+

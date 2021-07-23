@@ -1,0 +1,60 @@
+﻿@page "/surveys"
+
+
+<div class="container-fluid px-5 mt-5">
+    <div class="card text-center">
+        <div class="card-header">
+            Survey List
+        </div>
+        <div class="card-body">
+
+            @if (!isReady)
+            {
+                <p>Loading...</p>
+            }
+            else
+            {
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>Survey Name</th>
+                            <th>Description</th>
+                            <th>Times Taken</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @if (SurveyList.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="5">No surveys to display</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var survey in SurveyList)
+                        {
+                            <tr>
+                                <td><button class="btn btn-sm btn-primary" @onclick="() => TakeSurvey(survey.SurveyId)">Take Survey</button></td>
+                                <td><button class="btn btn-sm btn-info" @onclick="() => ViewSurveyResults(survey.SurveyId)">View Results</button></td>
+                                <td>@survey.SurveyName</td>
+                                <td>@survey.Description</td>
+                                <td>@survey.TotalTimesTaken</td>
+                            </tr>
+                        }
+                    }
+                  
+                    </tbody>
+                    
+                </table>
+            }
+
+        </div>
+        <div class="card-footer text-muted">
+            <p class="m-0 text-center text-white">Copyright &copy; BlazorBuilt Survey @DateTime.Now.Year</p>
+        </div>
+    </div>
+</div>
+
+
