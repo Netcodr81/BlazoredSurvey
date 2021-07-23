@@ -1,10 +1,8 @@
-﻿using SurveyAccessor.Models;
+﻿using SurveyManager.DTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlazorSurvey.ViewModels
 {
@@ -21,7 +19,7 @@ namespace BlazorSurvey.ViewModels
 
         public int TotalVotes { get; set; }
 
-        public bool FeaturedSurvey { get; set; }
+        public bool FeaturedSurvey { get; set; }        
 
         public int TotalTimesTaken { get; set; }
 
@@ -30,7 +28,7 @@ namespace BlazorSurvey.ViewModels
         [Required(ErrorMessage = "You must select an option")]
         public string SelectedOption { get; set; }
 
-        public List<SurveyOption> SurveyOptions { get; set; } = new List<SurveyOption>();
+        public List<SurveyOptionDTO> SurveyOptions { get; set; } = new List<SurveyOptionDTO>();
 
 
         public void SurveyTaken()

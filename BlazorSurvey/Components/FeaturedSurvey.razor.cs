@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using SurveyAccessor.Context;
-using SurveyAccessor.Models;
-using System;
-using System.Linq;
+using SurveyManager.Contracts;
+using SurveyManager.DTO;
 using System.Threading.Tasks;
 
 namespace BlazorSurvey.Components
@@ -22,7 +20,10 @@ namespace BlazorSurvey.Components
         [Inject]
         public SurveysDbContext Context { get; set; }
 
-        private Survey Survey = new Survey();
+        [Inject]
+        ISurveyManager SurveyManager { get; set; } 
+
+        private ISurveyDTO Survey = new SurveyDTO();
 
         private bool isReady = false;
 
@@ -39,20 +40,29 @@ namespace BlazorSurvey.Components
         {
             if (SurveyId != 0)
             {
-                Survey = await Context.Surveys.Where(x => x.SurveyId == SurveyId).Include(x => x.SurveyOptions)
-                    .FirstOrDefaultAsync();
+              
+                var result = await SurveyManager.GetSurveyAsync(SurveyId);
+
+                if (result.IsSuccess)
+                {
+                    Survey = result.Value;
+                }
             }
             else
             {
-                Random rnd = new Random();
-                var featuredSurveys = await Context.Surveys.Where(x => x.FeaturedSurvey == true).Include(x => x.SurveyOptions).ToListAsync();
+               
+                var result = await SurveyManager.GetRandomSurveyAsync();
 
-                Survey = featuredSurveys.OrderBy(x => rnd.Next()).Take(1).FirstOrDefault();
+                if (result.IsSuccess)
+                {
+                    Survey = result.Value;
+                }
+               
             }
-           
+
 
             isReady = true;
-        }
+        }       
 
     }
 }

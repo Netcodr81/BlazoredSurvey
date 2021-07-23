@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using SurveyAccessor.Models;
+using SurveyManager.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace BlazorSurvey.Components
     {
               
         [Parameter]
-        public SurveyOption Item { get; set; }
+        public SurveyOptionDTO Item { get; set; }
 
         [Parameter]
         public int TotalSurveyVotes { get; set; }

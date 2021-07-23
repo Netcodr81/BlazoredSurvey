@@ -2,22 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
 using BlazorSurvey.Utils.CustomValidation;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using SurveyAccessor.Context;
-using SurveyAccessor.Models;
+using SurveyManager.DTO;
 
 namespace BlazorSurvey.ViewModels
 {
     public class AddSurveyViewModel
     {
-        public AddSurveyViewModel()
-        {
-            //SurveyOptions.Add(new SelectListItem() { Text = "Please add an option...", Value = "", Selected = true });
-        }
-
+       
         #region Properties
         [Required(ErrorMessage = "Survey name is required")]
         public string SurveyName { get; set; }
@@ -31,9 +25,8 @@ namespace BlazorSurvey.ViewModels
         public List<SelectListItem> SurveyOptions { get; set; } = new List<SelectListItem>() { };
 
         [RequiredNumberOfItems(RequiredNumberOfRecords = 2, ErrorMessage = "At least 2 options are required")]
-        public List<SurveyOption> SurveyOptionsToAdd { get; set; } = new List<SurveyOption>();
-
-        public bool ShowDeleteOption { get; set; } = false;
+        public List<SurveyOptionDTO> SurveyOptionsToAdd { get; set; } = new List<SurveyOptionDTO>();
+     
         public SurveysDbContext Context { get; }
         public int MaxSurveyOptionId { get; set; }
 
@@ -45,9 +38,9 @@ namespace BlazorSurvey.ViewModels
 
         #region Methods
 
-        public Survey GenerateSurveyToSave()
+        public SurveyDTO GenerateSurveyToSave()
         {
-            return new Survey()
+            return new SurveyDTO()
             {
                 SurveyName = this.SurveyName,
                 Description = this.Description,
@@ -59,12 +52,12 @@ namespace BlazorSurvey.ViewModels
                 SurveyOptions = SurveyOptionsToAdd
             };
         }
-        public void AddSurveyOption(SurveyOption option, int maxId)
+        public void AddSurveyOption(SurveyOptionDTO option, int maxId)
         {
             SelectListItem optionToAdd = new SelectListItem { Selected = false, Text = option.Description, Value = maxId.ToString() };
             SurveyOptions.Add(optionToAdd);
             
-            ShowDeleteOption = false;
+            
         }
 
         public void RemoveSurveyOption(int optionId)
@@ -75,7 +68,7 @@ namespace BlazorSurvey.ViewModels
 
             SurveyOptions.Remove(SurveyOptions.FirstOrDefault(x => x.Value == optionId.ToString()));
 
-            ShowDeleteOption = false;
+            
         }
 
         public int GetMaxId()

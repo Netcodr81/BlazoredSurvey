@@ -4,10 +4,8 @@ using BlazorSurvey.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using SurveyAccessor.Context;
-using SurveyAccessor.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using SurveyManager.Contracts;
+using SurveyManager.DTO;
 using System.Threading.Tasks;
 
 namespace BlazorSurvey.Components.Modals
@@ -24,10 +22,13 @@ namespace BlazorSurvey.Components.Modals
         [Inject]
         private SurveysDbContext Context { get; set; }
 
+        [Inject]
+        public ISurveyManager SurveyManager { get; set; }
+
         private EditContext editContext { get; set; }
 
         private OptionViewModel optionModel { get; set; } = new OptionViewModel();
-        private SurveyOption model = new SurveyOption();
+        private SurveyOptionDTO model = new SurveyOptionDTO();
 
         protected override void OnInitialized()
         {
@@ -41,22 +42,9 @@ namespace BlazorSurvey.Components.Modals
             model.Fk_SurveyId = optionModel.Fk_SurveyId;
             model.Description = optionModel.Description;
             model.ImagePath = optionModel.ImagePath;
-            model.TotalVotes = 0;
+            model.TotalVotes = 0;     
 
-            try
-            {
-                Context.SurveyOptions.Add(model);
-                await Context.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-
-                var ex = e;
-            }
-
-
-
-            await Modal.CloseAsync(ModalResult.Ok<SurveyOption>(model));
+            await Modal.CloseAsync(ModalResult.Ok<SurveyOptionDTO>(model));
         }
 
         void Cancel() => Modal.CancelAsync();

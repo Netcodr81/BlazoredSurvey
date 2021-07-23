@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
@@ -11,7 +8,8 @@ using BlazorSurvey.Utils;
 using BlazorSurvey.ViewModels;
 using Microsoft.JSInterop;
 using SurveyAccessor.Context;
-using SurveyAccessor.Models;
+using SurveyManager.Contracts;
+using SurveyManager.DTO;
 
 namespace BlazorSurvey.Components
 {
@@ -31,6 +29,9 @@ namespace BlazorSurvey.Components
         public SurveysDbContext Context { get; set; }
 
         [Inject]
+        public ISurveyManager SurveyManager { get; set; }
+
+        [Inject]
         public Mapper mapper { get; set; }
 
         [Inject]
@@ -43,20 +44,19 @@ namespace BlazorSurvey.Components
 
         private async Task SaveSurvey()
         {
-            Context.Surveys.Add(model.GenerateSurveyToSave());
+            var result = await SurveyManager.AddSurveyAsync(model.GenerateSurveyToSave());
 
-            try
+            if (result.IsSuccess)
             {
-                await Context.SaveChangesAsync();
+                ToastService.ShowSuccess("Survey added successfully", "Success");
+                NavigationManager.NavigateTo("surveylist/edit");
             }
-            catch (Exception ex)
+            else
             {
+                ToastService.ShowError("An error occurred while saving survey", "Error");
+            }   
 
-                var exception = ex;
-            }
-
-            await JSRuntime.InvokeVoidAsync("alert", "Survey Saved");
-            NavigationManager.NavigateTo("surveylist/edit");
+          
         }
 
         private void CancelAdd()
@@ -92,10 +92,8 @@ namespace BlazorSurvey.Components
             if (!result.Cancelled)
             {
                 var results = result.Data;
-                model.AddSurveyOption((SurveyOption)result.Data, maxId);
-                model.SurveyOptionsToAdd.Add((SurveyOption)result.Data);
-
-                ToastService.ShowSuccess("","Option Added");
+                model.AddSurveyOption((SurveyOptionDTO)result.Data, maxId);
+                model.SurveyOptionsToAdd.Add((SurveyOptionDTO)result.Data);             
 
             }
         }

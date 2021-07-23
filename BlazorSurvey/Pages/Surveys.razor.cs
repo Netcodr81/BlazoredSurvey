@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using SurveyAccessor.Context;
+using SurveyManager.Contracts;
+using SurveyManager.DTO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,15 +19,24 @@ namespace BlazorSurvey.Pages
         public IJSRuntime JSRuntime { get; set; }
 
         [Inject]
+        public ISurveyManager SurveyManager { get; set; }
+
+        [Inject]
         public NavigationManager NavigationManager { get; set; }
 
-        public List<SurveyAccessor.Models.Survey> SurveyList { get; set; }
+        public List<SurveyDTO> SurveyList { get; set; }
 
         private bool isReady = false;
 
         protected override async Task OnInitializedAsync()
         {
-            SurveyList = await Context.Surveys.ToListAsync();
+            var result = await SurveyManager.GetAllSurveysAsync();
+
+            if (result.IsSuccess)
+            {
+                SurveyList = result.Value;
+            }
+            
             isReady = true;
         }
 

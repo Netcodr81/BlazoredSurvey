@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SurveyAccessor.Context;
 using System.Configuration;
+using SurveyManager.DTO;
 
 namespace BlazorSurvey.Utils
 {
@@ -31,7 +32,7 @@ namespace BlazorSurvey.Utils
             return result;
         }
 
-        public EditSurveyViewModel SurveyToEditSurveyModel(Survey survey)
+        public EditSurveyViewModel SurveyToEditSurveyModel(SurveyDTO survey)
         {
             EditSurveyViewModel results = new EditSurveyViewModel(Context)
             {
@@ -40,13 +41,14 @@ namespace BlazorSurvey.Utils
                 SurveyOptions = GenerateEditViewModelOptionSelectList(survey.SurveyOptions.ToList()),
                 SurveyQuestion = survey.SurveyQuestion,
                 FeaturedSurvey = survey.FeaturedSurvey,
-                Description = survey.Description
+                Description = survey.Description,
+                SurveyOptionsToAdd = survey.SurveyOptions
             };
 
             return results;
         }
 
-        public SurveyViewModel SurveyToSurveyViewModel(Survey survey)
+        public SurveyViewModel SurveyToSurveyViewModel(SurveyDTO survey)
         {
             var results = new SurveyViewModel()
             {
@@ -65,18 +67,9 @@ namespace BlazorSurvey.Utils
             return results;
         }
 
-        private List<SelectListItem> GenerateEditViewModelOptionSelectList(List<SurveyOption> options)
+        private List<SelectListItem> GenerateEditViewModelOptionSelectList(List<SurveyOptionDTO> options)
         {
-            List<SelectListItem> selectList = new List<SelectListItem>();
-
-            //if (options.Count == 0)
-            //{
-            //    selectList.Add(new SelectListItem { Text = "Please add an option...", Value = "", Selected = true });
-            //}
-            //else
-            //{
-            //    selectList.Add(new SelectListItem { Text = "Select an option...", Value = "", Selected = true });
-            //}
+            List<SelectListItem> selectList = new List<SelectListItem>();        
            
 
             foreach (var surveyOption in options)

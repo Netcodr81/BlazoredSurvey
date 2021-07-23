@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SurveyAccessor\SurveyAccessor.csproj" />
+    <ProjectReference Include="..\SurveyManager\SurveyManager.csproj" />
   </ItemGroup>
 
   <ItemGroup>

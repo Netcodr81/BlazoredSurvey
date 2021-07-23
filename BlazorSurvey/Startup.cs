@@ -19,6 +19,8 @@ using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Toast;
 using BlazorSurvey.Utils;
+using SurveyManager.Contracts;
+using SurveyManager;
 
 namespace BlazorSurvey
 {
@@ -49,6 +51,7 @@ namespace BlazorSurvey
             services.AddBlazoredModal();
             services.AddTransient<Mapper>();
             services.AddBlazoredToast();
+            services.AddTransient<ISurveyManager, SurveyManager.SurveyManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

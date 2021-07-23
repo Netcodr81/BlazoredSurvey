@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore;
+﻿using Blazored.Toast.Services;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using SurveyAccessor.Context;
-using System;
-using System.Linq;
+using SurveyManager.Contracts;
 using System.Threading.Tasks;
 
 namespace BlazorSurvey.Pages
@@ -18,26 +17,34 @@ namespace BlazorSurvey.Pages
         public NavigationManager NavigationManager { get; set; }
 
         [Inject]
+        public ISurveyManager SurveyManager { get; set; }
+
+        [Inject]
         public SurveysDbContext Context { get; set; }
+
+        [Inject]
+        public IToastService ToastService { get; set; }
 
 
         public async Task TakeRandomSurvey()
         {
-            Random rnd = new Random();
-            var surveyList = await Context.Surveys.ToListAsync();
+            var result = await SurveyManager.GetRandomSurveyAsync();
 
-            var randomSurvey = surveyList.OrderBy(x => rnd.Next()).Take(1).FirstOrDefault();
 
-            if (randomSurvey != null)
+            if (result.IsSuccess)
             {
-                NavigationManager.NavigateTo($"survey/{randomSurvey.SurveyId}");
+                NavigationManager.NavigateTo($"survey/{result.Value.SurveyId}");
             }
-           
+            else
+            {
+                ToastService.ShowError("Unable to get random survey at this time", "");
+            }
+
         }
 
         public void ViewSurveys()
         {
-            NavigationManager.NavigateTo("surveys");            
+            NavigationManager.NavigateTo("surveys");
         }
 
     }

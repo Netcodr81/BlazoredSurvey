@@ -1,12 +1,14 @@
-﻿using BlazorSurvey.Utils;
+﻿using Blazored.Toast.Services;
+using BlazorSurvey.Utils;
 using BlazorSurvey.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using SurveyAccessor.Context;
+using SurveyManager.Contracts;
+using SurveyManager.DTO;
 using System.Linq;
 using System.Threading.Tasks;
-using Blazored.Toast.Services;
 
 namespace BlazorSurvey.Pages
 {
@@ -30,20 +32,26 @@ namespace BlazorSurvey.Pages
         public NavigationManager NavigationManager { get; set; }
 
         [Inject]
+        public ISurveyManager SurveyManager { get; set; }
+
+        [Inject]
         public IToastService ToastService { get; set; }
 
         private SurveyViewModel SurveyVM = new SurveyViewModel();
 
-        private SurveyAccessor.Models.Survey survey;
+        private SurveyDTO survey;
 
         private bool isReady = false;
 
         protected override async Task OnInitializedAsync()
         {
-            survey = await Context.Surveys.Where(x => x.SurveyId == Id).Include(x => x.SurveyOptions).FirstOrDefaultAsync();
+            var result = await SurveyManager.GetSurveyAsync(Id);
 
-
-            SurveyVM = mapper.SurveyToSurveyViewModel(survey);
+            if (result.IsSuccess)
+            {
+                survey = result.Value;
+                SurveyVM = mapper.SurveyToSurveyViewModel(survey);
+            }         
 
             isReady = true;
         }
@@ -59,14 +67,18 @@ namespace BlazorSurvey.Pages
             survey.SurveyOptions = SurveyVM.SurveyOptions;
             survey.TotalVotes = SurveyVM.TotalVotes;
 
-            Context.Attach(survey);
-            Context.Entry(survey).State = EntityState.Modified;
+            var result = await SurveyManager.UpdateSurveyAsync(survey);
 
-            await Context.SaveChangesAsync();
+            if (result.IsSuccess)
+            {
+                ToastService.ShowInfo("Thank you for taking the survey", "Thank You");
 
-            ToastService.ShowInfo("Thank you for taking the survey", "Thank You");
-
-            NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+                ToastService.ShowError("An Error occurred", "");
+            }        
 
         }
 

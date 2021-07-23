@@ -16,9 +16,9 @@
                 <table class="table-borderless">
                     <tbody>
 
-                        @foreach (var survey in Survey.SurveyOptions)
+                        @foreach (var option in Survey.SurveyOptions)
                         {
-                            <SurveyOptionItem Item="@survey" TotalSurveyVotes="@Survey.TotalVotes" />
+                            <SurveyOptionItem Item="@option" TotalSurveyVotes="@Survey.TotalVotes" />
                         }
 
                     </tbody>

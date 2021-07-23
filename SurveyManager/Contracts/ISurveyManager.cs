@@ -19,5 +19,8 @@ namespace SurveyManager.Contracts
         Task<Result<SurveyDTO>> AddSurveyAsync(SurveyDTO survey);
         Result<bool> UpdateSurvey(SurveyDTO survey);
         Task<Result<bool>> UpdateSurveyAsync(SurveyDTO survey);
+        Result<SurveyDTO> GetMostPopularSurvey();
+        Task<Result<SurveyDTO>> GetMostPopularSurveyAsync();
+
     }
 }

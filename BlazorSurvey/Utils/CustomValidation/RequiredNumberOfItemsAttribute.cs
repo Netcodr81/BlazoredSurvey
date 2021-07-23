@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SurveyAccessor.Models;
+using SurveyManager.DTO;
 
 namespace BlazorSurvey.Utils.CustomValidation
 {
@@ -17,7 +18,7 @@ namespace BlazorSurvey.Utils.CustomValidation
         {
             
 
-            var numberOfItemsInList = ((List<SurveyOption>)value).Count();
+            var numberOfItemsInList = ((List<SurveyOptionDTO>)value).Count();
 
             if (numberOfItemsInList < RequiredNumberOfRecords)
             {

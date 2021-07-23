@@ -4,14 +4,12 @@ using BlazorSurvey.Components.Modals;
 using BlazorSurvey.Utils;
 using BlazorSurvey.ViewModels;
 using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using SurveyAccessor.Context;
-using SurveyAccessor.Models;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Blazored.Toast.Services;
+using SurveyManager.DTO;
+using SurveyManager.Contracts;
 
 namespace BlazorSurvey.Components
 {
@@ -35,6 +33,9 @@ namespace BlazorSurvey.Components
         IModalService Modal { get; set; }
 
         [Inject]
+        public ISurveyManager SurveyManager { get; set; }
+
+        [Inject]
         public IToastService ToastService { get; set; }
 
         [CascadingParameter]
@@ -42,15 +43,20 @@ namespace BlazorSurvey.Components
 
         private bool isReady = false;
 
-        private SurveyAccessor.Models.Survey Survey;
+        private SurveyDTO Survey;
 
         private EditSurveyViewModel SurveyToUpdate { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
+            var result = await SurveyManager.GetSurveyAsync(Id);
 
-            Survey = await Context.Surveys.Where(x => x.SurveyId == Id).Include(x => x.SurveyOptions).FirstOrDefaultAsync();
-            SurveyToUpdate = mapper.SurveyToEditSurveyModel(Survey);
+            if (result.IsSuccess)
+            {
+                Survey = result.Value;
+                SurveyToUpdate = mapper.SurveyToEditSurveyModel(Survey);
+            }         
+          
 
             isReady = true;
         }
@@ -64,15 +70,20 @@ namespace BlazorSurvey.Components
             Survey.SurveyQuestion = SurveyToUpdate.SurveyQuestion;
             Survey.FeaturedSurvey = SurveyToUpdate.FeaturedSurvey;
             Survey.Description = SurveyToUpdate.Description;
+            Survey.SurveyOptions = SurveyToUpdate.SurveyOptionsToAdd;
 
-            Context.Attach(Survey);
-            Context.Entry(Survey).State = EntityState.Modified;
+            var result = await SurveyManager.UpdateSurveyAsync(Survey);
 
-            await Context.SaveChangesAsync();
-
-            //await JSRuntime.InvokeVoidAsync("alert", "Survey Updated");
-            ToastService.ShowSuccess("","Survey Updated");
-            NavigationManager.NavigateTo("surveylist/edit");
+            if (result.IsSuccess)
+            {
+                ToastService.ShowSuccess("", "Survey Updated");
+                NavigationManager.NavigateTo("surveylist/edit");
+            }
+            else
+            {
+                ToastService.ShowError("An error occurred while updating the survey", "Error");
+            }
+          
         }
 
         private void CancelUpdate()
@@ -96,8 +107,6 @@ namespace BlazorSurvey.Components
 
         private async Task AddOption()
         {
-            var maxId = SurveyToUpdate.SurveyOptions.Count == 0 ? 1 : Int32.Parse(SurveyToUpdate.SurveyOptions.OrderByDescending(x => x.Value).FirstOrDefault().Value);
-
             var parameters = new ModalParameters();
             parameters.Add("SurveyId", SurveyToUpdate.SurveyId);
 
@@ -108,7 +117,7 @@ namespace BlazorSurvey.Components
             if (!result.Cancelled)
             {
                 var results = result.Data;
-                SurveyToUpdate.AddSurveyOption((SurveyOption)result.Data);
+                SurveyToUpdate.AddSurveyOption((SurveyOptionDTO)result.Data);
             }
         }
 

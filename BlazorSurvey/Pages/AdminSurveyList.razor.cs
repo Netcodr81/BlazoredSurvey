@@ -2,14 +2,13 @@
 using Blazored.Modal.Services;
 using BlazorSurvey.Components.Modals;
 using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using SurveyAccessor.Context;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Blazored.Toast.Services;
+using SurveyManager.Contracts;
+using SurveyManager.DTO;
 
 namespace BlazorSurvey.Pages
 {
@@ -26,9 +25,12 @@ namespace BlazorSurvey.Pages
         public IJSRuntime JSRuntime { get; set; }
 
         [Inject]
+        public ISurveyManager SurveyManager { get; set; }
+
+        [Inject]
         public NavigationManager NavigationManager { get; set; }
 
-        public List<SurveyAccessor.Models.Survey> SurveyList { get; set; }
+        public List<SurveyDTO> SurveyList { get; set; }
 
         [Inject]
         public IToastService ToastService { get; set; }
@@ -37,7 +39,13 @@ namespace BlazorSurvey.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            SurveyList = await Context.Surveys.ToListAsync();
+            var result = await SurveyManager.GetAllSurveysAsync();
+
+            if (result.IsSuccess)
+            {
+                SurveyList = result.Value;
+            }
+        
             isReady = true;
         }
 
@@ -56,25 +64,25 @@ namespace BlazorSurvey.Pages
 
             if (!result.Cancelled)
             {
-                var surveyToDelete = await Context.Surveys.Where(x => x.SurveyId == id).Include(x => x.SurveyOptions).FirstOrDefaultAsync();
 
-                if (surveyToDelete != null)
+            
+                var deleteResult = await SurveyManager.DeleteSurveyAsync(id);
+
+                if (deleteResult.IsSuccess)
                 {
-                    Context.Attach(surveyToDelete);
-                    Context.Entry(surveyToDelete).State = EntityState.Deleted;
+                   
+                    var newSurveyList = await SurveyManager.GetAllSurveysAsync();
 
-                    try
+                    if (newSurveyList.IsSuccess)
                     {
-                        await Context.SaveChangesAsync();
-
-                        SurveyList = await Context.Surveys.ToListAsync();
+                        SurveyList = newSurveyList.Value;
                         ToastService.ShowSuccess("", "Survey Deleted");
                     }
-                    catch (Exception ex)
+                    else
                     {
-
                         ToastService.ShowError("", "An error occurred while deleting this survey");
                     }
+                
                 }
             }
 

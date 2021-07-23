@@ -1,13 +1,11 @@
-﻿using SurveyAccessor.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using BlazorSurvey.Utils.CustomValidation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SurveyAccessor.Context;
-using Microsoft.EntityFrameworkCore;
+using SurveyManager.DTO;
 
 namespace BlazorSurvey.ViewModels
 {
@@ -33,49 +31,41 @@ namespace BlazorSurvey.ViewModels
 
         [RequiredNumberOfSelectItems(RequiredNumberOfRecords = 2, ErrorMessage = "At least 2 options are required")]
         public List<SelectListItem> SurveyOptions { get; set; } = new List<SelectListItem>();
-
-        public bool ShowDeleteOption { get; set; } = false;
+      
+        public List<SurveyOptionDTO> SurveyOptionsToAdd { get; set; } = new List<SurveyOptionDTO>();
+      
         public SurveysDbContext Context { get; }
 
-        public void AddSurveyOption(SurveyOption option)
+        public void AddSurveyOption(SurveyOptionDTO option)
         {
             SelectListItem optionToAdd = new SelectListItem {Selected = false, Text = option.Description, Value = option.SurveyOptionId.ToString()};
             SurveyOptions.Add(optionToAdd);
-            ShowDeleteOption = false;
+            SurveyOptionsToAdd.Add(new SurveyOptionDTO()
+            {
+                Fk_SurveyId = SurveyId,
+                Description = option.Description,
+                ImagePath = option.ImagePath,
+                TotalVotes = 0
+            });
+          
         }
 
         public async Task RemoveSurveyOption(int optionId)
         {
-            var survey = await Context.Surveys.Where(x => x.SurveyId == SurveyId).Include(x => x.SurveyOptions).FirstOrDefaultAsync();
-            var optionToRemove = survey.SurveyOptions.FirstOrDefault(x => x.SurveyOptionId == optionId);
-
-            survey.TotalVotes -= optionToRemove.TotalVotes;
-
-            survey.SurveyOptions.Remove(optionToRemove);
-            //SurveyOptions.Remove(SurveyOptions.FirstOrDefault(x => x.Value == optionId.ToString()));
-
-            Context.Attach(survey);
-            Context.Entry(survey).State = EntityState.Modified;
-
-            try
-            {
-                await Context.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-
-                var ex = e;
-            }
+           
+            string description = SurveyOptions.FirstOrDefault(x => x.Value == optionId.ToString()).Text;
 
             SurveyOptions.Remove(SurveyOptions.FirstOrDefault(x => x.Value == optionId.ToString()));
 
-            //if (SurveyOptions.Count == 1)
-            //{
-            //    SurveyOptions.First().Text = "Please add an option...";              
-
-            //}
-
-            ShowDeleteOption = false;
+            if (SurveyOptionsToAdd.Any(x => x.SurveyOptionId == optionId))
+            {
+                SurveyOptionsToAdd.Remove(SurveyOptionsToAdd.FirstOrDefault(x => x.SurveyOptionId == optionId));
+            }
+            else
+            {
+                SurveyOptionsToAdd.Remove(SurveyOptionsToAdd.FirstOrDefault(x => x.Description == description && x.SurveyOptionId == 0));
+            }         
+         
         }
     }
 }

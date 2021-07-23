@@ -18,6 +18,7 @@ namespace SurveyManager.Utils
                 SurveyName = survey.SurveyName,
                 Description = survey.Description,
                 SurveyQuestion = survey.SurveyQuestion,
+                FeaturedSurvey = survey.FeaturedSurvey,
                 TotalVotes = survey.TotalVotes,
                 TotalTimesTaken = survey.TotalTimesTaken,
                 CreatedOn = survey.CreatedOn,
@@ -35,6 +36,7 @@ namespace SurveyManager.Utils
                 SurveyOptionId = option.SurveyOptionId,
                 Description = option.Description,
                 ImagePath = option.ImagePath,
+                Fk_SurveyId= option.Fk_SurveyId,
                 TotalVotes = option.TotalVotes
             };
 
@@ -61,7 +63,8 @@ namespace SurveyManager.Utils
                 SurveyName = survey.SurveyName,
                 Description = survey.Description,
                 SurveyQuestion = survey.SurveyQuestion,
-                TotalVotes = survey.TotalVotes,
+                FeaturedSurvey = survey.FeaturedSurvey,
+                TotalVotes = survey.TotalVotes,                
                 TotalTimesTaken = survey.TotalTimesTaken,
                 CreatedOn = survey.CreatedOn,
                 SurveyOptions = FromSurveyOptionList(survey.SurveyOptions)
@@ -78,6 +81,7 @@ namespace SurveyManager.Utils
                 SurveyOptionId = option.SurveyOptionId,
                 Description = option.Description,
                 ImagePath = option.ImagePath,
+                Fk_SurveyId = option.Fk_SurveyId,
                 TotalVotes = option.TotalVotes
             };
 
