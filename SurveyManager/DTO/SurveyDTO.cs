@@ -21,6 +21,8 @@ namespace SurveyManager.DTO
 
         public DateTime CreatedOn { get; set; }
 
-        public List<SurveyDTO> SurveyOptions { get; set; }
+        public List<SurveyOptionDTO> SurveyOptions { get; set; }
+
+       
     }
 }

@@ -14,6 +14,6 @@ namespace SurveyManager.Contracts
         bool FeaturedSurvey { get; set; }
         int TotalTimesTaken { get; set; }
         DateTime CreatedOn { get; set; }
-        List<SurveyDTO> SurveyOptions { get; set; }
+        List<SurveyOptionDTO> SurveyOptions { get; set; }
     }
 }

@@ -75,12 +75,6 @@ namespace BlazorSurvey.ViewModels
 
             SurveyOptions.Remove(SurveyOptions.FirstOrDefault(x => x.Value == optionId.ToString()));
 
-            //if (SurveyOptions.Count == 1)
-            //{
-            //    SurveyOptions.First().Text = "Please add an option...";
-
-            //}
-
             ShowDeleteOption = false;
         }
 

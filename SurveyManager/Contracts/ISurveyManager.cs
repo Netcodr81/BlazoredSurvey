@@ -15,8 +15,8 @@ namespace SurveyManager.Contracts
         Task<Result<bool>> DeleteSurveyAsync(int id);
         Result<SurveyDTO> GetRandomSurvey();
         Task<Result<SurveyDTO>> GetRandomSurveyAsync();
-        Result<bool> AddSurvey(SurveyDTO survey);
-        Task<Result<bool>> AddSurveyAsync(SurveyDTO survey);
+        Result<SurveyDTO> AddSurvey(SurveyDTO survey);
+        Task<Result<SurveyDTO>> AddSurveyAsync(SurveyDTO survey);
         Result<bool> UpdateSurvey(SurveyDTO survey);
         Task<Result<bool>> UpdateSurveyAsync(SurveyDTO survey);
     }
