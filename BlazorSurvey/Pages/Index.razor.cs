@@ -1,4 +1,5 @@
-﻿using Blazored.Toast.Services;
+﻿using Ardalis.Result;
+using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using SurveyAccessor.Context;
@@ -34,6 +35,10 @@ namespace BlazorSurvey.Pages
             if (result.IsSuccess)
             {
                 NavigationManager.NavigateTo($"survey/{result.Value.SurveyId}");
+            }
+            else if(result.Status == ResultStatus.NotFound)
+            {
+                ToastService.ShowInfo("There are currently no surveys available");
             }
             else
             {

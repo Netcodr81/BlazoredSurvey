@@ -178,6 +178,11 @@ namespace SurveyManager
                 var result = new SurveyDTO();
                 var surveys = await _context.Surveys.Where(x => x.FeaturedSurvey == true).Include(x => x.SurveyOptions).ToListAsync();
 
+                if (surveys.Count == 0)
+                {                    
+                    return Result<SurveyDTO>.NotFound();
+                }
+
                 result = Mapper.ToSurveyDTO(surveys.OrderBy(x => rnd.Next()).Take(1).FirstOrDefault());
 
                 return Result<SurveyDTO>.Success(result);

@@ -12,6 +12,7 @@ namespace SurveyManager.Utils
     {
         public static SurveyDTO ToSurveyDTO(Survey survey)
         {
+
             var result = new SurveyDTO()
             {
                 SurveyId = survey.SurveyId,

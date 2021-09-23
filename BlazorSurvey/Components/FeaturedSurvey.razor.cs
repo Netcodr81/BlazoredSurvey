@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ardalis.Result;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using SurveyAccessor.Context;
 using SurveyManager.Contracts;
@@ -21,9 +22,9 @@ namespace BlazorSurvey.Components
         public SurveysDbContext Context { get; set; }
 
         [Inject]
-        ISurveyManager SurveyManager { get; set; } 
+        ISurveyManager SurveyManager { get; set; }
 
-        private ISurveyDTO Survey = new SurveyDTO();
+        private ISurveyDTO Survey = null;
 
         private bool isReady = false;
 
@@ -56,6 +57,11 @@ namespace BlazorSurvey.Components
                 if (result.IsSuccess)
                 {
                     Survey = result.Value;
+                }
+
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    Survey = null;
                 }
                
             }
